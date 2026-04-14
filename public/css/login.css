@@ -33,8 +33,14 @@
 
     .card__inner {
       padding: 32px;
+      justify-content: center;
     }
 
+    .card__logo{
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
     .brand {
       display: block;
       text-align: center;
@@ -90,7 +96,7 @@
       min-height: 48px;
       border: none;
       border-radius: 12px;
-      background: #2563eb;
+      background: #003366;
       color: #ffffff;
       font-size: 15px;
       font-weight: 700;
@@ -99,7 +105,7 @@
     }
 
     button:hover {
-      background: #1e40af;
+      background: #1976d2;
     }
 
     .footer {
