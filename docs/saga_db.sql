@@ -4,21 +4,20 @@ USE SAGA;
 CREATE TABLE Usuarios (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
     nombre_usuario VARCHAR(50) NOT NULL UNIQUE,
-    -- Aumentado a 255 para soportar hashes de seguridad (BCrypt/Argon2)
-    contraseña VARCHAR(255) NOT NULL, 
+    contraseña VARCHAR(255) NOT NULL, -- Aumentado para seguridad (Hashes)
     rol VARCHAR(45) NOT NULL,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
     
 CREATE TABLE Ciudadanos (
-    id_ciudadano INT AUTO_INCREMENT PRIMARY KEY,
+    id_citizen INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
     apellido_paterno VARCHAR(50) NOT NULL,
     apellido_materno VARCHAR(50) NOT NULL,
-    telefono VARCHAR(15), -- Aumentado un poco por si usan extensiones o prefijos
+    telefono VARCHAR(15), 
     fecha_ingreso DATE DEFAULT (CURRENT_DATE),
     estado BOOLEAN DEFAULT TRUE
-);	
+);
 
 CREATE TABLE Reuniones (
     id_reunion INT AUTO_INCREMENT PRIMARY KEY,
