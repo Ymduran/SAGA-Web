@@ -130,9 +130,7 @@
 <!-- ===================== MODAL ELIMINAR ===================== -->
 <div class="modal fade" id="modalEliminar" tabindex="-1">
     <div class="modal-dialog">
-        <div class="moda
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    l-content">
+        <div class="modal-content">
             <div class="modal-header bg-danger text-white">
                 <h5 class="modal-title">Confirmar Eliminación</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -194,15 +192,24 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-<!-- Script para cargar el header -->
 <script>
-    fetch("/public/src/components/header.html")
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById("header").innerHTML = data;
-        })
-        .catch(error => console.error("Error cargando el header:", error));
-</script>
+fetch("/public/src/components/header.html")
+    .then(response => response.text())
+    .then(data => {
+        document.getElementById("header").innerHTML = data;
 
+        const currentPage = window.location.pathname.split("/").pop();
+        const links = document.querySelectorAll(".nav-link");
+
+        links.forEach(link => {
+            const linkPage = link.getAttribute("href").split("/").pop();
+
+            if (linkPage === currentPage) {
+                link.classList.add("active");
+            }
+        });
+    });
+</script>
+<script src="/public/js/buscador.js"></script>
 </body>
 </html>
