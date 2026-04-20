@@ -15,7 +15,13 @@
 </head>
 <body>
 
-<div id="header"></div>
+    
+<div id="header-placeholder"></div>
+
+<!-- NAVBAR SUPERIOR -->
+<div class="topbar">
+    <h5>Sistema Automatizado de Gestión de Asistencias (SAGA)</h5>
+</div>
 
 <div class="content">
 
@@ -192,24 +198,9 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-<script>
-fetch("/public/src/components/header.html")
-    .then(response => response.text())
-    .then(data => {
-        document.getElementById("header").innerHTML = data;
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../public/js/layout.js"></script>
+<script src="../public/js/buscador.js"></script>
 
-        const currentPage = window.location.pathname.split("/").pop();
-        const links = document.querySelectorAll(".nav-link");
-
-        links.forEach(link => {
-            const linkPage = link.getAttribute("href").split("/").pop();
-
-            if (linkPage === currentPage) {
-                link.classList.add("active");
-            }
-        });
-    });
-</script>
-<script src="/public/js/buscador.js"></script>
 </body>
 </html>

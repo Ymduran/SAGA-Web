@@ -1,0 +1,11 @@
+.table th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+}
+
+.card {
+    border-radius: 12px;
+}

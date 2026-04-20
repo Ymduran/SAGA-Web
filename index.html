@@ -15,7 +15,7 @@
 </head>
 <body>
 
-<div id="header"></div>
+<div id="header-placeholder"></div>
 
 <div class="content">
 
@@ -195,14 +195,6 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 <!-- Script para cargar el header -->
-<script>
-    fetch("/public/src/components/header.html")
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById("header").innerHTML = data;
-        })
-        .catch(error => console.error("Error cargando el header:", error));
-</script>
-
+<script src="../public/js/layout.js"></script>
 </body>
 </html>
