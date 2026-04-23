@@ -27,15 +27,34 @@
 <div class="search-section">
 
     <div class="search-box text-center">
-        <h6 class="mb-3">Buscar por Nombre o ID</h6>
+        <h6 class="mb-3">Registro de Asistencia</h6>
 
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Ingrese nombre o ID...">
-            <button class="btn btn-primary">Buscar</button>
+        <div class="mb-3">
+            <select class="form-select" id="reunionSelect"></select>
         </div>
 
-        <div class="result-placeholder">
-            Utilice el campo de búsqueda para encontrar un miembro
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" id="searchInput" placeholder="Ingrese nombre o ID...">
+            <button class="btn btn-primary" id="btnBuscar">Buscar</button>
+        </div>
+
+        <div class="result-placeholder p-0 border-0 bg-transparent">
+            <table class="table table-striped mt-3 mb-0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Teléfono</th>
+                        <th>Estado</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaAsistencias">
+                    <tr>
+                        <td colspan="5">Seleccione una reunión para iniciar.</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -46,7 +65,7 @@
 
 <!-- Cargar Sidebar -->
 
-<script src="../public/js/buscador.js"></script>
-<script src="../public/js/layout.js"></script>
+<script src="/public/js/layout.js"></script>
+<script src="/public/js/registros.js"></script>
 </body>
 </html>
