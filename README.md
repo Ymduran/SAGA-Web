@@ -9,7 +9,7 @@ SAGA es una solución web diseñada para optimizar y automatizar el registro de 
 
 ## Tecnologías utilizadas
 * **Frontend:** HTML5, CSS3, JavaScript.
-* **Backend:** [Por definir: Java/PHP/Node.js]
+* **Backend:** Node.js + Express.
 * **Base de Datos:** MySQL.
 * **Editor:** Visual Studio Code.
 
@@ -20,8 +20,11 @@ SAGA es una solución web diseñada para optimizar y automatizar el registro de 
 
 ## Cómo empezar
 1. Clona este repositorio.
-2. Ejecuta el script SQL ubicado en `/docs/saga_db.sql` en el servidor local de MySQL.
-3. Abre `index.html` en VS Code usando *Live Server*.
+2. Ejecuta el script SQL ubicado en `/docs/saga_db.sql`.
+3. Copia `.env.example` a `.env` y ajusta credenciales MySQL.
+4. Instala dependencias: `npm install`.
+5. Ejecuta el backend: `npm start`.
+6. Abre `http://localhost:3000`.
 
 ---
 *Proyecto desarrollado en la clase de Ingeniería de Software II - UNSIJ.*
