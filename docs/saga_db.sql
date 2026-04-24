@@ -1,47 +1,42 @@
-CREATE DATABASE IF NOT EXISTS SAGA;
-USE SAGA;
+CREATE DATABASE IF NOT EXISTS saga CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE saga;
 
-CREATE TABLE Usuarios (
+CREATE TABLE IF NOT EXISTS usuarios (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
     nombre_usuario VARCHAR(50) NOT NULL UNIQUE,
-    contraseña VARCHAR(255) NOT NULL, -- Aumentado para seguridad (Hashes)
-    rol VARCHAR(45) NOT NULL,
+    contrasena VARCHAR(255) NOT NULL,
+    rol VARCHAR(45) NOT NULL DEFAULT 'admin',
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-    
-CREATE TABLE Ciudadanos (
-    id_citizen INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(50) NOT NULL,
-    apellido_paterno VARCHAR(50) NOT NULL,
-    apellido_materno VARCHAR(50) NOT NULL,
-    telefono VARCHAR(15), 
-    fecha_ingreso DATE DEFAULT (CURRENT_DATE),
-    estado BOOLEAN DEFAULT TRUE
+
+CREATE TABLE IF NOT EXISTS ciudadanos (
+    id_ciudadano INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_completo VARCHAR(120) NOT NULL,
+    telefono VARCHAR(20) NOT NULL,
+    fecha_ingreso DATE NOT NULL DEFAULT (CURRENT_DATE),
+    estado BOOLEAN NOT NULL DEFAULT TRUE
 );
 
-CREATE TABLE Reuniones (
+CREATE TABLE IF NOT EXISTS reuniones (
     id_reunion INT AUTO_INCREMENT PRIMARY KEY,
     nombre_reunion VARCHAR(100) NOT NULL,
-    fecha_reunion DATE DEFAULT (CURRENT_DATE),
-    descripcion TEXT
+    fecha_reunion DATE NOT NULL,
+    descripcion TEXT NULL
 );
-    
-CREATE TABLE Asistencias (
+
+CREATE TABLE IF NOT EXISTS asistencias (
     id_asistencia INT AUTO_INCREMENT PRIMARY KEY,
     id_ciudadano INT NOT NULL,
     id_reunion INT NOT NULL,
-    id_usuario_registro INT NOT NULL,
-    hora_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     estado_asistencia BOOLEAN NOT NULL DEFAULT FALSE,
-
+    hora_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT unique_asistencia UNIQUE (id_ciudadano, id_reunion),
-
-    CONSTRAINT fk_asistencia_ciudadano FOREIGN KEY (id_ciudadano) 
-        REFERENCES Ciudadanos(id_ciudadano) ON DELETE CASCADE ON UPDATE CASCADE,
-
-    CONSTRAINT fk_asistencia_reunion FOREIGN KEY (id_reunion) 
-        REFERENCES Reuniones(id_reunion) ON DELETE CASCADE ON UPDATE CASCADE,
-
-    CONSTRAINT fk_asistencia_usuario FOREIGN KEY (id_usuario_registro) 
-        REFERENCES Usuarios(id_usuario) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_asistencia_ciudadano FOREIGN KEY (id_ciudadano)
+        REFERENCES ciudadanos(id_ciudadano) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_asistencia_reunion FOREIGN KEY (id_reunion)
+        REFERENCES reuniones(id_reunion) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+INSERT INTO usuarios (nombre_usuario, contrasena, rol)
+VALUES ('admin', '1234', 'admin')
+ON DUPLICATE KEY UPDATE nombre_usuario = VALUES(nombre_usuario);
