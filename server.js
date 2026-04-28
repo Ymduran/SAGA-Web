@@ -142,6 +142,26 @@ app.post("/api/reuniones", async (req, res) => {
   }
 });
 
+app.put("/api/reuniones/:id", async (req, res) => {
+  const { id } = req.params;
+  const { nombre_reunion, fecha_reunion, descripcion } = req.body;
+  if (!nombre_reunion || !fecha_reunion) {
+    return res.status(400).json({ error: "Nombre y fecha son obligatorios." });
+  }
+  try {
+    const [result] = await pool.query(
+      "UPDATE reuniones SET nombre_reunion = ?, fecha_reunion = ?, descripcion = ? WHERE id_reunion = ?",
+      [nombre_reunion, fecha_reunion, descripcion || null, id]
+    );
+    if (!result.affectedRows) {
+      return res.status(404).json({ error: "Reunión no encontrada." });
+    }
+    res.json({ message: "Reunión actualizada." });
+  } catch (error) {
+    res.status(500).json({ error: "No fue posible actualizar la reunión." });
+  }
+});
+
 app.get("/api/asistencias", async (req, res) => {
   const reunionId = Number(req.query.reunionId);
   const search = (req.query.search || "").trim();
