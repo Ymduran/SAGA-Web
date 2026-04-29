@@ -24,6 +24,10 @@ CREATE TABLE IF NOT EXISTS reuniones (
     descripcion TEXT NULL
 );
 
+-- Ajuste para bases existentes que tengan columnas antiguas.
+ALTER TABLE reuniones DROP COLUMN IF EXISTS fecha_inicio;
+ALTER TABLE reuniones DROP COLUMN IF EXISTS fecha_fin;
+
 CREATE TABLE IF NOT EXISTS asistencias (
     id_asistencia INT AUTO_INCREMENT PRIMARY KEY,
     id_ciudadano INT NOT NULL,

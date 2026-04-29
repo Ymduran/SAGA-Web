@@ -34,6 +34,7 @@
                         <th>Evento</th>
                         <th>Fecha</th>
                         <th>Descripción</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="tablaReuniones"></tbody>
@@ -65,6 +66,37 @@
                     </div>
                     <div class="d-grid mt-4">
                         <button type="submit" class="btn btn-primary">Crear Reunión</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalEditarReunion" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Editar Reunión</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formEditarReunion">
+                    <input type="hidden" id="editarReunionId">
+                    <div class="mb-3">
+                        <label class="form-label text-secondary small fw-bold">Nombre de la Reunión</label>
+                        <input type="text" class="form-control" id="editarNombreReunion" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-secondary small fw-bold">Fecha</label>
+                        <input type="date" class="form-control" id="editarFechaReunion" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-secondary small fw-bold">Descripción Corta</label>
+                        <textarea class="form-control" id="editarDescReunion" rows="3"></textarea>
+                    </div>
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                     </div>
                 </form>
             </div>
