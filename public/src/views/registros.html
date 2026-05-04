@@ -34,8 +34,11 @@
         </div>
 
         <div class="input-group mb-3">
-            <input type="text" class="form-control" id="searchInput" placeholder="Ingrese nombre o ID...">
+            <input type="text" class="form-control" id="searchInput" placeholder="Ingrese nombre...">
             <button class="btn btn-primary" id="btnBuscar">Buscar</button>
+
+             <!-- Lista de sugerencias -->
+            <div id="sugerencias" class="list-group position-absolute w-100" style="top: 100%; z-index: 1000;"></div>
         </div>
 
         <div class="result-placeholder p-0 border-0 bg-transparent">
