@@ -34,13 +34,11 @@
         </div>
 
         <div class="input-group mb-3">
-            <input type="text" class="form-control" id="searchInput" placeholder="Ingrese nombre o ID...">
+            <input type="text" class="form-control" id="searchInput" placeholder="Ingrese nombre...">
             <button class="btn btn-primary" id="btnBuscar">Buscar</button>
-        </div>
 
-        <div class="d-flex justify-content-end gap-2 mb-3">
-            <button class="btn btn-success" id="btnExportarExcel">Exportar a Excel</button>
-            <button class="btn btn-danger" id="btnExportarPdf">Exportar a PDF</button>
+             <!-- Lista de sugerencias -->
+            <div id="sugerencias" class="list-group position-absolute w-100" style="top: 100%; z-index: 1000;"></div>
         </div>
 
         <div class="result-placeholder p-0 border-0 bg-transparent">
@@ -67,12 +65,8 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf@latest/dist/jspdf.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@latest/dist/jspdf.plugin.autotable.min.js"></script>
 
 <!-- Cargar Sidebar -->
-
 <script src="/public/js/layout.js"></script>
 <script src="/public/js/registros.js"></script>
 </body>
