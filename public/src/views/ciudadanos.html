@@ -8,14 +8,18 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <!-- CSS del header -->
-    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="/public/css/header.css">
     
     <!-- CSS propio -->
-    <link rel="stylesheet" href="../css/ciudadanos.css">
+    <link rel="stylesheet" href="/public/css/ciudadanos.css">
 </head>
 <body>
+<div id="header-placeholder"></div>
 
-<div id="header"></div>
+<!-- NAVBAR SUPERIOR -->
+<div class="topbar">
+    <h5>Sistema Automatizado de Gestión de Asistencias (SAGA)</h5>
+</div>
 
 <div class="content">
 
@@ -39,28 +43,7 @@
                         <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>456</td>
-                        <td>Juan Pérez</td>
-                        <td>555-0101</td>
-                        <td>15/01/2024</td>
-                        <td>
-                            <button class="btn btn-sm btn-primary btn-editar">Editar</button>
-                            <button class="btn btn-sm btn-danger btn-eliminar">Eliminar</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>457</td>
-                        <td>María García</td>
-                        <td>555-0102</td>
-                        <td>20/02/2024</td>
-                        <td>
-                            <button class="btn btn-sm btn-primary btn-editar">Editar</button>
-                            <button class="btn btn-sm btn-danger btn-eliminar">Eliminar</button>
-                        </td>
-                    </tr>
-                </tbody>
+                <tbody id="tablaCiudadanos"></tbody>
             </table>
         </div>
     </div>
@@ -76,21 +59,21 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form>
+                <form id="formAgregarCiudadano">
                     <div class="mb-3">
                         <label class="form-label">Nombre</label>
-                        <input type="text" class="form-control">
+                        <input type="text" class="form-control" id="agregarNombre" required>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Teléfono</label>
-                        <input type="text" class="form-control">
+                        <input type="text" class="form-control" id="agregarTelefono" required>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button class="btn btn-primary">Guardar</button>
+                <button class="btn btn-primary" id="btnGuardarCiudadano">Guardar</button>
             </div>
         </div>
     </div>
@@ -121,7 +104,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button class="btn btn-primary">Guardar Cambios</button>
+                <button class="btn btn-primary" id="btnActualizarCiudadano">Guardar Cambios</button>
             </div>
         </div>
     </div>
@@ -141,7 +124,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button class="btn btn-danger">Eliminar</button>
+                <button class="btn btn-danger" id="btnEliminarCiudadano">Eliminar</button>
             </div>
         </div>
     </div>
@@ -150,66 +133,8 @@
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-
-    const modalEditar = new bootstrap.Modal(document.getElementById('modalEditar'));
-    const modalEliminar = new bootstrap.Modal(document.getElementById('modalEliminar'));
-
-    // BOTÓN EDITAR
-    document.querySelectorAll(".btn-editar").forEach(button => {
-        button.addEventListener("click", function () {
-
-            const fila = this.closest("tr");
-            const id = fila.children[0].textContent;
-            const nombre = fila.children[1].textContent;
-            const telefono = fila.children[2].textContent;
-
-            document.getElementById("editarId").value = id;
-            document.getElementById("editarNombre").value = nombre;
-            document.getElementById("editarTelefono").value = telefono;
-
-            modalEditar.show();
-        });
-    });
-
-    // BOTÓN ELIMINAR
-    document.querySelectorAll(".btn-eliminar").forEach(button => {
-        button.addEventListener("click", function () {
-
-            const fila = this.closest("tr");
-            const id = fila.children[0].textContent;
-            const nombre = fila.children[1].textContent;
-
-            document.getElementById("eliminarId").value = id;
-            document.getElementById("mensajeEliminar").textContent =
-                "¿Está seguro de eliminar al ciudadano " + nombre + " (ID: " + id + ")?";
-
-            modalEliminar.show();
-        });
-    });
-
-});
-</script>
-
-<script>
-fetch("../components/header.html")
-    .then(response => response.text())
-    .then(data => {
-        document.getElementById("header").innerHTML = data;
-
-        const currentPage = window.location.pathname.split("/").pop();
-        const links = document.querySelectorAll(".nav-link");
-
-        links.forEach(link => {
-            const linkPage = link.getAttribute("href").split("/").pop();
-
-            if (linkPage === currentPage) {
-                link.classList.add("active");
-            }
-        });
-    });
-</script>
+<script src="/public/js/layout.js"></script>
+<script src="/public/js/ciudadanos.js"></script>
 
 </body>
 </html>

@@ -39,6 +39,22 @@
     font-weight: 500;
 }
 
+/* NAVBAR SUPERIOR */
+        .topbar {
+            background-color: #003066;
+            color: white;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            margin-left: 240px;
+        }
+
+        .topbar h5 {
+            margin: 0;
+            font-weight: 400;
+        }
+
 /* CONTENIDO PRINCIPAL */
 .content {
     margin-left: 240px;
