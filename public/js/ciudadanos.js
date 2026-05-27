@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const tabla = document.getElementById("tablaCiudadanos");
+  // Verificar tablas 
   if (!tabla) return;
 
   const modalAgregar = bootstrap.Modal.getOrCreateInstance(document.getElementById("modalAgregar"));

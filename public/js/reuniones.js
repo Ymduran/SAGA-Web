@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const formEditar = document.getElementById("formEditarReunion");
   const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById("modalNuevaReunion"));
   const modalEditar = bootstrap.Modal.getOrCreateInstance(document.getElementById("modalEditarReunion"));
+   // Verificar tablas 
   if (!tabla || !form) return;
 
   function fila(reunion) {

@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Elementos del DOM
+  // Elementos del DOM DE SAGA
   const reunionSelect = document.getElementById("filtroReunion");
   const ctx = document.getElementById("asistenciaChart");
   const btnExportarExcel = document.getElementById("btnExportarExcel");
