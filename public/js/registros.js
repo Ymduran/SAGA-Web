@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!reunionSelect || !tabla) return;
 
   async function cargarReuniones() {
-    const response = await fetch("/api/reuniones");
+    const response = await sagaFetch("/api/reuniones");
     const reuniones = await response.json();
 
     reunionSelect.innerHTML = reuniones.length
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const texto = searchInput.value.trim();
 
-    const response = await fetch(
+    const response = await sagaFetch(
       `/api/asistencias?reunionId=${encodeURIComponent(reunionId)}&search=${encodeURIComponent(texto)}`
     );
 
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const response = await fetch(
+    const response = await sagaFetch(
       `/api/asistencias?reunionId=${encodeURIComponent(reunionId)}&search=${encodeURIComponent(texto)}`
     );
 
@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const boton = event.target.closest(".btn-toggle-asistencia");
     if (!boton) return;
 
-    await fetch("/api/asistencias", {
+    await sagaFetch("/api/asistencias", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

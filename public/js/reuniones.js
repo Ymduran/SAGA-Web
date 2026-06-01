@@ -22,14 +22,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function cargarReuniones() {
-    const response = await fetch("/api/reuniones");
+    const response = await sagaFetch("/api/reuniones");
     const reuniones = await response.json();
     tabla.innerHTML = reuniones.length ? reuniones.map(fila).join("") : '<tr><td colspan="5">Sin reuniones registradas.</td></tr>';
   }
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    await fetch("/api/reuniones", {
+    await sagaFetch("/api/reuniones", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
   formEditar?.addEventListener("submit", async (event) => {
     event.preventDefault();
     const id = document.getElementById("editarReunionId").value;
-    await fetch(`/api/reuniones/${id}`, {
+    await sagaFetch(`/api/reuniones/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   async function cargarReuniones() {
     try {
-      const response = await fetch("/api/reuniones");
+      const response = await sagaFetch("/api/reuniones");
       const reuniones = await response.json();
       
       reunionSelect.innerHTML = '<option value="">Seleccione una reunión</option>' +
@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const reunionNombre = reunionSelect.options[reunionSelect.selectedIndex]?.text || "Reunión";
       
       // Obtener datos de asistencia para la reunión
-      const response = await fetch(`/api/asistencias?reunionId=${encodeURIComponent(reunionId)}`);
+      const response = await sagaFetch(`/api/asistencias?reunionId=${encodeURIComponent(reunionId)}`);
       const asistentes = await response.json();
 
       // Calcular porcentajes

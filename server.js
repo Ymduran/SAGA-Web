@@ -1,11 +1,14 @@
 const path = require("path");
 const express = require("express");
+const session = require("express-session");
 const mysql = require("mysql2/promise");
 const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
+const publicDir = path.join(__dirname, "public");
+const loginPage = path.join(publicDir, "src", "views", "login.html");
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST || "localhost",
@@ -17,33 +20,123 @@ const pool = mysql.createPool({
   connectionLimit: 10
 });
 
-app.use(cors());
-app.use(express.json());
-app.use("/public", express.static(path.join(__dirname, "public")));
-app.use(express.static(__dirname));
+function isAuthenticated(req) {
+  return Boolean(req.session?.user);
+}
 
-app.get("/", (_req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
+function requireAuthPage(req, res, next) {
+  if (isAuthenticated(req)) return next();
+  return res.redirect("/");
+}
+
+function requireAuthApi(req, res, next) {
+  if (isAuthenticated(req)) return next();
+  return res.status(401).json({ error: "No autenticado." });
+}
+
+function validarTelefonoMx(telefono) {
+  const soloDigitos = String(telefono || "").replace(/\D/g, "");
+  if (soloDigitos.length !== 10) {
+    return {
+      ok: false,
+      error: "El teléfono debe tener exactamente 10 dígitos (ej. 9516668896)."
+    };
+  }
+  return { ok: true, telefono: soloDigitos };
+}
+
+app.use(cors({ origin: true, credentials: true }));
+app.use(express.json());
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "saga-dev-secret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 8
+    }
+  })
+);
+
+app.get("/", (req, res) => {
+  if (isAuthenticated(req)) {
+    return res.redirect("/inicio");
+  }
+  return res.sendFile(loginPage);
+});
+
+const protectedPages = [
+  ["/inicio", path.join(__dirname, "index.html")],
+  ["/public/src/views/ciudadanos.html", path.join(publicDir, "src", "views", "ciudadanos.html")],
+  ["/public/src/views/registros.html", path.join(publicDir, "src", "views", "registros.html")],
+  ["/public/src/views/reuniones.html", path.join(publicDir, "src", "views", "reuniones.html")],
+  ["/public/src/views/reportes.html", path.join(publicDir, "src", "views", "reportes.html")]
+];
+
+protectedPages.forEach(([route, filePath]) => {
+  app.get(route, requireAuthPage, (_req, res) => {
+    res.sendFile(filePath);
+  });
+});
+
+app.get("/index.html", requireAuthPage, (_req, res) => {
+  res.redirect("/inicio");
+});
+
+app.use("/public", (req, res, next) => {
+  const isProtectedView =
+    req.path.startsWith("/src/views/") && !req.path.endsWith("/login.html");
+  if (isProtectedView && !isAuthenticated(req)) {
+    return res.redirect("/");
+  }
+  return next();
+}, express.static(publicDir));
+
+app.use("/api", (req, res, next) => {
+  const isPublicAuthRoute =
+    (req.method === "POST" && req.path === "/auth/login") ||
+    (req.method === "GET" && req.path === "/auth/me");
+  if (isPublicAuthRoute) return next();
+  return requireAuthApi(req, res, next);
+});
+
+app.get("/api/auth/me", (req, res) => {
+  if (!isAuthenticated(req)) {
+    return res.status(401).json({ error: "No autenticado." });
+  }
+  return res.json({ user: req.session.user });
 });
 
 app.post("/api/auth/login", async (req, res) => {
-  const { usuario, contrasena } = req.body;
-  if (!usuario || !contrasena) {
+  const { nombre_usuario, contrasena } = req.body;
+  if (!nombre_usuario || !contrasena) {
     return res.status(400).json({ error: "Usuario y contraseña son obligatorios." });
   }
 
   try {
     const [rows] = await pool.query(
       "SELECT id_usuario, nombre_usuario, rol FROM usuarios WHERE nombre_usuario = ? AND contrasena = ?",
-      [usuario, contrasena]
+      [nombre_usuario, contrasena]
     );
     if (!rows.length) {
       return res.status(401).json({ error: "Credenciales incorrectas." });
     }
+    req.session.user = rows[0];
     return res.json({ message: "Login correcto", user: rows[0] });
   } catch (error) {
     return res.status(500).json({ error: "Error al validar usuario." });
   }
+});
+
+app.post("/api/auth/logout", (req, res) => {
+  req.session.destroy((error) => {
+    if (error) {
+      return res.status(500).json({ error: "No fue posible cerrar sesión." });
+    }
+    res.clearCookie("connect.sid");
+    return res.json({ message: "Sesión cerrada." });
+  });
 });
 
 app.get("/api/ciudadanos", async (_req, res) => {
@@ -63,10 +156,15 @@ app.post("/api/ciudadanos", async (req, res) => {
     return res.status(400).json({ error: "Nombre y teléfono son obligatorios." });
   }
 
+  const telefonoValidado = validarTelefonoMx(telefono);
+  if (!telefonoValidado.ok) {
+    return res.status(400).json({ error: telefonoValidado.error });
+  }
+
   try {
     const [result] = await pool.query(
       "INSERT INTO ciudadanos (nombre_completo, telefono) VALUES (?, ?)",
-      [nombre_completo, telefono]
+      [nombre_completo, telefonoValidado.telefono]
     );
     const [rows] = await pool.query(
       "SELECT id_ciudadano, nombre_completo, telefono, fecha_ingreso FROM ciudadanos WHERE id_ciudadano = ?",
@@ -85,10 +183,15 @@ app.put("/api/ciudadanos/:id", async (req, res) => {
     return res.status(400).json({ error: "Nombre y teléfono son obligatorios." });
   }
 
+  const telefonoValidado = validarTelefonoMx(telefono);
+  if (!telefonoValidado.ok) {
+    return res.status(400).json({ error: telefonoValidado.error });
+  }
+
   try {
     const [result] = await pool.query(
       "UPDATE ciudadanos SET nombre_completo = ?, telefono = ? WHERE id_ciudadano = ? AND estado = 1",
-      [nombre_completo, telefono, id]
+      [nombre_completo, telefonoValidado.telefono, id]
     );
     if (!result.affectedRows) {
       return res.status(404).json({ error: "Ciudadano no encontrado." });
