@@ -1,14 +1,23 @@
 document.addEventListener("DOMContentLoaded", function () {
     const placeholder = document.getElementById("header-placeholder");
 
-    if (placeholder) {
-        // Usamos ../ para salir de views/ y entrar a public/
-        fetch("/public/src/components/header.html")
-            .then(response => {
-                if (!response.ok) throw new Error("Error al cargar el header");
-                return response.text();
-            })
-            .then(data => {
+    if (!placeholder) return;
+
+    fetch("/api/auth/me", { credentials: "include" })
+        .then((response) => {
+            if (!response.ok) {
+                window.location.href = "/";
+                return null;
+            }
+            return fetch("/public/src/components/header.html");
+        })
+        .then((response) => {
+            if (!response) return null;
+            if (!response.ok) throw new Error("Error al cargar el header");
+            return response.text();
+        })
+        .then((data) => {
+            if (!data) return;
                 placeholder.innerHTML = data;
 
                 // Lógica para poner la clase 'active' en el menú
@@ -21,7 +30,15 @@ document.addEventListener("DOMContentLoaded", function () {
                         link.classList.add("active");
                     }
                 });
-            })
-            .catch(err => console.error("Fallo al cargar componente:", err));
-    }
+        })
+        .catch((err) => console.error("Fallo al cargar componente:", err));
+});
+
+document.addEventListener("click", async (event) => {
+    const logoutButton = event.target.closest("#btnCerrarSesion");
+    if (!logoutButton) return;
+
+    event.preventDefault();
+    await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+    window.location.href = "/";
 });

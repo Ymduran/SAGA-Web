@@ -16,6 +16,29 @@ document.addEventListener("DOMContentLoaded", () => {
     return new Date(fechaISO).toLocaleDateString("es-MX");
   }
 
+  function validarTelefonoMx(telefono) {
+    const soloDigitos = String(telefono || "").replace(/\D/g, "");
+    if (soloDigitos.length !== 10) {
+      return {
+        ok: false,
+        error: "El teléfono debe tener exactamente 10 dígitos (ej. 9516668896)."
+      };
+    }
+    return { ok: true, telefono: soloDigitos };
+  }
+
+  function obtenerTelefonoValido(inputId) {
+    const input = document.getElementById(inputId);
+    const resultado = validarTelefonoMx(input.value.trim());
+    if (!resultado.ok) {
+      input.setCustomValidity(resultado.error);
+      input.reportValidity();
+      return null;
+    }
+    input.setCustomValidity("");
+    return resultado.telefono;
+  }
+
   function renderFila(ciudadano) {
     return `
       <tr>
@@ -32,21 +55,29 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function cargarCiudadanos() {
-    const response = await fetch("/api/ciudadanos");
+    const response = await sagaFetch("/api/ciudadanos");
     const data = await response.json();
     tabla.innerHTML = data.map(renderFila).join("");
   }
 
   btnGuardar?.addEventListener("click", async () => {
     if (!formAgregar.reportValidity()) return;
-    await fetch("/api/ciudadanos", {
+    const telefono = obtenerTelefonoValido("agregarTelefono");
+    if (!telefono) return;
+
+    const response = await sagaFetch("/api/ciudadanos", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         nombre_completo: document.getElementById("agregarNombre").value.trim(),
-        telefono: document.getElementById("agregarTelefono").value.trim()
+        telefono
       })
     });
+    if (!response.ok) {
+      const data = await response.json();
+      alert(data.error || "No fue posible guardar el ciudadano.");
+      return;
+    }
     formAgregar.reset();
     modalAgregar.hide();
     await cargarCiudadanos();
@@ -72,20 +103,28 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   btnActualizar?.addEventListener("click", async () => {
-    await fetch(`/api/ciudadanos/${document.getElementById("editarId").value}`, {
+    const telefono = obtenerTelefonoValido("editarTelefono");
+    if (!telefono) return;
+
+    const response = await sagaFetch(`/api/ciudadanos/${document.getElementById("editarId").value}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         nombre_completo: document.getElementById("editarNombre").value.trim(),
-        telefono: document.getElementById("editarTelefono").value.trim()
+        telefono
       })
     });
+    if (!response.ok) {
+      const data = await response.json();
+      alert(data.error || "No fue posible actualizar el ciudadano.");
+      return;
+    }
     modalEditar.hide();
     await cargarCiudadanos();
   });
 
   btnEliminar?.addEventListener("click", async () => {
-    await fetch(`/api/ciudadanos/${document.getElementById("eliminarId").value}`, {
+    await sagaFetch(`/api/ciudadanos/${document.getElementById("eliminarId").value}`, {
       method: "DELETE"
     });
     modalEliminar.hide();
