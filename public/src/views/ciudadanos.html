@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/public/css/header.css">
     
     <!-- CSS propio -->
+    <link rel="stylesheet" href="/public/css/forms.css">
     <link rel="stylesheet" href="/public/css/ciudadanos.css">
 </head>
 <body>
@@ -31,9 +32,17 @@
         </button>
     </div>
 
+    <div class="card shadow-sm mb-3">
+        <div class="card-body py-3">
+            <label for="buscarCiudadano" class="form-label mb-1">Buscar ciudadano</label>
+            <input type="search" class="form-control" id="buscarCiudadano"
+                   placeholder="Filtrar por nombre, teléfono o ID..." autocomplete="off">
+        </div>
+    </div>
+
     <div class="card shadow-sm">
         <div class="card-body">
-            <table class="table table-hover align-middle">
+            <table class="table table-hover align-middle" id="tablaCiudadanosList">
                 <thead class="table-light">
                     <tr>
                         <th>ID</th>
@@ -141,6 +150,7 @@
 
 <script src="/public/js/auth.js"></script>
 <script src="/public/js/layout.js"></script>
+<script src="/public/js/buscador.js"></script>
 <script src="/public/js/ciudadanos.js"></script>
 
 </body>

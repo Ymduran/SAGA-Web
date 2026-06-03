@@ -1,0 +1,16 @@
+/**
+ * Estilos compartidos para campos de formulario (coherente con Bootstrap 5).
+ */
+.form-control,
+.form-select,
+textarea.form-control {
+    border: 1px solid #adb5bd !important;
+    box-shadow: none;
+}
+
+.form-control:focus,
+.form-select:focus,
+textarea.form-control:focus {
+    border-color: #86b7fe !important;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
