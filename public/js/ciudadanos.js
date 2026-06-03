@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
   const tabla = document.getElementById("tablaCiudadanos");
-  // Verificar tablas 
   if (!tabla) return;
 
   const modalAgregar = bootstrap.Modal.getOrCreateInstance(document.getElementById("modalAgregar"));
@@ -11,6 +10,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnGuardar = document.getElementById("btnGuardarCiudadano");
   const btnActualizar = document.getElementById("btnActualizarCiudadano");
   const btnEliminar = document.getElementById("btnEliminarCiudadano");
+  const inputBuscar = document.getElementById("buscarCiudadano");
+
+  function escaparHtml(texto) {
+    const div = document.createElement("div");
+    div.textContent = texto;
+    return div.innerHTML;
+  }
+
+  function aplicarFiltroBusqueda() {
+    if (typeof filtrarTabla === "function") {
+      filtrarTabla("buscarCiudadano", "tablaCiudadanosList");
+    }
+  }
 
   function formatearFecha(fechaISO) {
     return new Date(fechaISO).toLocaleDateString("es-MX");
@@ -58,7 +70,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const response = await sagaFetch("/api/ciudadanos");
     const data = await response.json();
     tabla.innerHTML = data.map(renderFila).join("");
+    aplicarFiltroBusqueda();
   }
+
+  inputBuscar?.addEventListener("input", aplicarFiltroBusqueda);
 
   btnGuardar?.addEventListener("click", async () => {
     if (!formAgregar.reportValidity()) return;
@@ -96,8 +111,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (botonEliminar) {
       document.getElementById("eliminarId").value = botonEliminar.dataset.id;
-      document.getElementById("mensajeEliminar").textContent =
-        `¿Está seguro de eliminar al ciudadano ${botonEliminar.dataset.nombre} (ID: ${botonEliminar.dataset.id})?`;
+      document.getElementById("mensajeEliminar").innerHTML =
+        `¿Está seguro de eliminar al ciudadano <strong>${escaparHtml(botonEliminar.dataset.nombre)}</strong> (ID: ${botonEliminar.dataset.id})?`;
       modalEliminar.show();
     }
   });
