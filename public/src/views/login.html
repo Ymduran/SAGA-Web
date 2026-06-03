@@ -10,21 +10,45 @@
 
   <div class="login-page">
     <div class="card">
-      <div class="card__inner"> 
+      <div class="card__inner">
         <div class="card__logo">
-          <img src="/public/assets/logo_saga_azul.png" width="110px" height="90px">
+          <img src="/public/assets/logo_saga_azul.png" width="110" height="90" alt="Logo SAGA">
         </div>
-        
-        <form id="loginForm">
+
+        <form id="loginForm" class="login-form" novalidate>
           <div class="form-group">
-            <input id="usuario" name="usuario" type="text" placeholder="Ingresa tu usuario" autocomplete="username" />
+            <input id="usuario" name="usuario" type="text" class="form-input"
+                   placeholder="Ingresa tu usuario" autocomplete="username" />
           </div>
+
           <div class="form-group">
-            <input id="contrasena" name="contrasena" type="password" placeholder="Ingresa tu contraseña" autocomplete="current-password" />
+            <label class="visually-hidden" for="contrasena">Contraseña</label>
+            <div class="password-input-wrap">
+              <input id="contrasena" name="contrasena" type="password" class="form-input"
+                     placeholder="Ingresa tu contraseña" autocomplete="current-password" />
+              <button type="button" class="toggle-password" id="togglePassword"
+                      aria-label="Mostrar contraseña" title="Mostrar contraseña">
+                <!-- Ojo cerrado: contraseña oculta -->
+                <svg class="icon-eye-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+                <!-- Ojo abierto: contraseña visible -->
+                <svg class="icon-eye-on" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden>
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
           </div>
-          <button type="submit">Iniciar Sesión</button>
+
+          <button type="submit" class="btn-submit">Iniciar Sesión</button>
         </form>
-        <p id="loginError" style="color:#cc0000; margin-top:12px;"></p>
+        <p id="loginError" role="alert"></p>
       </div>
     </div>
   </div>

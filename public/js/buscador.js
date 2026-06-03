@@ -10,7 +10,8 @@ function filtrarTabla(inputId, tablaId) {
         let visible = false;
         const td = tr[i].getElementsByTagName("td");
         for (let j = 0; j < td.length; j++) {
-            if (td[j] && td[j].innerHTML.toLowerCase().indexOf(filter) > -1) {
+            const texto = (td[j]?.textContent || "").toLowerCase();
+            if (texto.indexOf(filter) > -1) {
                 visible = true;
                 break;
             }

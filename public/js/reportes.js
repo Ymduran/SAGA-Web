@@ -139,6 +139,10 @@ document.addEventListener("DOMContentLoaded", () => {
   /**
    * Obtener datos para exportación con formato específico
    */
+  const INDICE_COL_ESTADO = 4;
+  const COLOR_PRESENTE = [25, 135, 84];
+  const COLOR_AUSENTE = [220, 53, 69];
+
   function obtenerDatosExportacion() {
     if (!datosActuales.asistentes || datosActuales.asistentes.length === 0) {
       return null;
@@ -146,14 +150,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
     return {
       reunionNombre: datosActuales.reunionNombre,
-      encabezados: ["ID", "Nombre", "Teléfono", "Estado"],
-      filas: datosActuales.asistentes.map(a => [
-        a.id_ciudadano || '',
-        a.nombre_completo || '',
-        a.telefono || '',
+      encabezados: ["#", "Nombre", "Teléfono", "ID", "Estado"],
+      filas: datosActuales.asistentes.map((a, indice) => [
+        indice + 1,
+        a.nombre_completo || "",
+        a.telefono || "",
+        a.id_ciudadano || "",
         obtenerEstadoTexto(a.estado_asistencia)
       ])
     };
+  }
+
+  function estilosEstadoPdf(estado) {
+    if (estado === "Presente") {
+      return { textColor: COLOR_PRESENTE, fontStyle: "bold" };
+    }
+    if (estado === "Ausente") {
+      return { textColor: COLOR_AUSENTE, fontStyle: "bold" };
+    }
+    return {};
+  }
+
+  function colorearEstadoEnHoja(hoja, filaInicioDatos, cantidadFilas) {
+    for (let i = 0; i < cantidadFilas; i++) {
+      const ref = XLSX.utils.encode_cell({ r: filaInicioDatos + i, c: INDICE_COL_ESTADO });
+      const celda = hoja[ref];
+      if (!celda) continue;
+      const presente = celda.v === "Presente";
+      celda.s = {
+        font: {
+          color: { rgb: presente ? "198754" : "DC3545" },
+          bold: true
+        }
+      };
+    }
   }
 
   /**
@@ -201,17 +231,19 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
 
     const hoja = XLSX.utils.aoa_to_sheet(contenido);
-    
-    // Ajustar anchos de columna
-    hoja['!cols'] = [
-      { wch: 8 },  // ID
-      { wch: 30 }, // Nombre
-      { wch: 15 }, // Teléfono
-      { wch: 12 }  // Estado
+    const filaInicioDatos = 3;
+
+    colorearEstadoEnHoja(hoja, filaInicioDatos, filas.length);
+
+    hoja["!cols"] = [
+      { wch: 6 },
+      { wch: 30 },
+      { wch: 15 },
+      { wch: 10 },
+      { wch: 12 }
     ];
 
-    // Combinar celda del título (opcional)
-    hoja['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 3 } }];
+    hoja["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 4 } }];
 
     const libro = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(libro, hoja, "Asistencia");
@@ -249,7 +281,7 @@ document.addEventListener("DOMContentLoaded", () => {
       head: [encabezados],
       body: filas,
       startY: 42,
-      styles: { 
+      styles: {
         fontSize: 12,
         cellPadding: 3,
         lineColor: [100, 100, 100],
@@ -258,17 +290,23 @@ document.addEventListener("DOMContentLoaded", () => {
       headStyles: {
         fillColor: [0, 0, 245],
         textColor: [255, 255, 255],
-        fontStyle: 'bold',
-        halign: 'center'
+        fontStyle: "bold",
+        halign: "center"
       },
       columnStyles: {
-        0: { cellWidth: 27, halign: 'center' },  // ID
-        1: { cellWidth: 120 },                      // Nombre
-        2: { cellWidth: 60, halign: 'center' },    // Teléfono
-        3: { cellWidth: 60, halign: 'center' }     // Estado
+        0: { cellWidth: 18, halign: "center" },
+        1: { cellWidth: 95 },
+        2: { cellWidth: 45, halign: "center" },
+        3: { cellWidth: 22, halign: "center" },
+        4: { cellWidth: 35, halign: "center" }
       },
       alternateRowStyles: {
         fillColor: [245, 245, 245]
+      },
+      didParseCell: (data) => {
+        if (data.section === "body" && data.column.index === INDICE_COL_ESTADO) {
+          Object.assign(data.cell.styles, estilosEstadoPdf(data.cell.raw));
+        }
       }
     });
 

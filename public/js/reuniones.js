@@ -2,10 +2,34 @@ document.addEventListener("DOMContentLoaded", () => {
   const tabla = document.getElementById("tablaReuniones");
   const form = document.getElementById("formReunion");
   const formEditar = document.getElementById("formEditarReunion");
+  const fechaReunion = document.getElementById("fechaReunion");
   const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById("modalNuevaReunion"));
   const modalEditar = bootstrap.Modal.getOrCreateInstance(document.getElementById("modalEditarReunion"));
-   // Verificar tablas 
   if (!tabla || !form) return;
+
+  function fechaMinimaHoy() {
+    return new Date().toISOString().slice(0, 10);
+  }
+
+  function configurarFechaMinima() {
+    const hoy = fechaMinimaHoy();
+    if (fechaReunion) {
+      fechaReunion.min = hoy;
+      fechaReunion.setCustomValidity("");
+    }
+  }
+
+  function esFechaPasada(valorFecha) {
+    return valorFecha && valorFecha < fechaMinimaHoy();
+  }
+
+  configurarFechaMinima();
+  document.getElementById("modalNuevaReunion")?.addEventListener("show.bs.modal", configurarFechaMinima);
+  fechaReunion?.addEventListener("change", () => {
+    if (!esFechaPasada(fechaReunion.value)) {
+      fechaReunion.setCustomValidity("");
+    }
+  });
 
   function fila(reunion) {
     return `<tr>
@@ -29,16 +53,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    await sagaFetch("/api/reuniones", {
+    const fecha = fechaReunion.value;
+
+    if (esFechaPasada(fecha)) {
+      fechaReunion.setCustomValidity("No puede programar reuniones en fechas pasadas.");
+      fechaReunion.reportValidity();
+      return;
+    }
+    fechaReunion.setCustomValidity("");
+
+    const response = await sagaFetch("/api/reuniones", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         nombre_reunion: document.getElementById("nombreReunion").value.trim(),
-        fecha_reunion: document.getElementById("fechaReunion").value,
+        fecha_reunion: fecha,
         descripcion: document.getElementById("descReunion").value.trim()
       })
     });
+    if (!response.ok) {
+      const data = await response.json();
+      alert(data.error || "No fue posible crear la reunión.");
+      return;
+    }
     form.reset();
+    configurarFechaMinima();
     modal.hide();
     await cargarReuniones();
   });
