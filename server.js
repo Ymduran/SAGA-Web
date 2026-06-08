@@ -2,19 +2,16 @@ const path = require("path");
 const express = require("express");
 const mysql = require("mysql2/promise");
 const cors = require("cors");
-const bcrypt = require("bcrypt");
-
-
-
 require("dotenv").config();
+
 const app = express();
 const port = Number(process.env.PORT || 3000);
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST || "localhost",
   port: Number(process.env.DB_PORT || 3306),
-  user: process.env.DB_USER || "saga",
-  password: process.env.DB_PASSWORD || "proyecto2026",
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASSWORD || "",
   database: process.env.DB_NAME || "saga",
   waitForConnections: true,
   connectionLimit: 10
@@ -23,17 +20,12 @@ const pool = mysql.createPool({
 app.use(cors());
 app.use(express.json());
 app.use("/public", express.static(path.join(__dirname, "public")));
-//app.use(express.static(__dirname));
+app.use(express.static(__dirname));
 
-/*
 app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
-});*/
-app.get("/", (_req, res) => {
-  console.log("Entrando al login");
-  res.sendFile(path.join(__dirname, "public/src/views/login.html"));
 });
-/*
+
 app.post("/api/auth/login", async (req, res) => {
   const { usuario, contrasena } = req.body;
   if (!usuario || !contrasena) {
@@ -52,80 +44,6 @@ app.post("/api/auth/login", async (req, res) => {
   } catch (error) {
     return res.status(500).json({ error: "Error al validar usuario." });
   }
-});
-*/
-app.post("/api/auth/login", async (req, res) => {
-
-  const { usuario, contrasena } = req.body;
-
-  // Validar campos vacíos
-  if (!usuario || !contrasena) {
-
-    return res.status(400).json({
-      error: "Todos los campos son obligatorios."
-    });
-
-  }
-
-  try {
-
-    // Buscar usuario
-    const [rows] = await pool.query(
-      "SELECT * FROM usuarios WHERE nombre_usuario = ?",
-      [usuario]
-    );
-
-    // Verificar usuario
-    if (rows.length === 0) {
-
-      return res.status(401).json({
-        error: "Usuario o contraseña incorrectos."
-      });
-
-    }
-
-    const usuarioDB = rows[0];
-
-    // Comparar contraseña encriptada
-    /*
-    const passwordCorrecta = await bcrypt.compare(
-      contrasena,
-      usuarioDB.contrasena
-    );*/
-    const passwordCorrecta = contrasena === usuarioDB.contrasena;
-
-    // Contraseña incorrecta
-    if (!passwordCorrecta) {
-
-      return res.status(401).json({
-        error: "Usuario o contraseña incorrectos."
-      });
-
-    }
-
-    // Login exitoso
-    res.json({
-
-      mensaje: "Inicio de sesión exitoso",
-
-      usuario: {
-        id: usuarioDB.id_usuario,
-        nombre: usuarioDB.nombre_usuario,
-        rol: usuarioDB.rol
-      }
-
-    });
-
-  } catch (error) {
-
-    console.error(error);
-
-    res.status(500).json({
-      error: "Error interno del servidor"
-    });
-
-  }
-
 });
 
 app.get("/api/ciudadanos", async (_req, res) => {
@@ -336,7 +254,3 @@ app.get("/api/reportes/resumen", async (req, res) => {
 app.listen(port, () => {
   console.log(`SAGA disponible en http://localhost:${port}`);
 });
-
-
-
-
