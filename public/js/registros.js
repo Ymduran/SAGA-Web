@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = await response.json();
 
     sugerencias.innerHTML = "";
-
+    /*
     data.slice(0, 5).forEach(item => {
       const opcion = document.createElement("button");
       opcion.type = "button";
@@ -99,7 +99,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       sugerencias.appendChild(opcion);
     });
-
+    */
+   
     // 🔹 También filtrar tabla en tiempo real
     cargarAsistencias();
   });
