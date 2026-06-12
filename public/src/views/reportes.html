@@ -29,11 +29,10 @@
 
     <h5 class="mb-4">Reportes y Transparencia</h5>
 
-    <!-- FILTROS -->
+    <!-- 1. SELECTOR DE REUNIÓN -->
     <div class="card card-custom mb-4">
         <div class="card-body">
             <h6 class="mb-3">Controles de Filtrado</h6>
-
             <div class="row g-3 align-items-end">
                 <div class="col-md-4">
                     <label class="form-label">Reunión</label>
@@ -45,18 +44,57 @@
         </div>
     </div>
 
-    <!-- GRÁFICA -->
+    <!-- 2. CONTROLES DE TABLA (Ordenamiento y Filtro de Estado) -->
+    <div class="mb-3" style="display:flex; flex-wrap:wrap; gap:1rem; align-items:center; padding:0.75rem 1rem; border:1px solid #dee2e6; border-radius:0.5rem; background:#fff;">
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+            <label class="form-label mb-0" for="ordenamientoReporte">Ordenar por</label>
+            <select class="form-select form-select-sm" id="ordenamientoReporte" style="min-width:220px;">
+                <option value="nombre">Ordenar alfabéticamente por Nombre</option>
+                <option value="apellido">Ordenar alfabéticamente por Apellido Paterno</option>
+            </select>
+        </div>
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+            <label class="form-label mb-0" for="statusFilter">Mostrar:</label>
+            <select class="form-select form-select-sm" id="statusFilter" style="min-width:180px;">
+                <option value="todos">Todos</option>
+                <option value="Presente">Presentes</option>
+                <option value="Ausente">Ausentes</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- 3. TABLA DE DATOS CON SCROLL -->
     <div class="card card-custom mb-4">
+        <div class="card-body p-0">
+            <div id="reporteContainer" style="max-height:480px; overflow-y:auto;">
+                <table class="table table-hover mb-0" id="tablaReporte">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Nombre</th>
+                            <th>Teléfono</th>
+                            <th>ID</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reporteBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTONES DE EXPORTACIÓN (justo debajo de la tabla) -->
+    <div class="d-flex justify-content-end gap-2 mb-4">
+        <button class="btn btn-success" id="btnExportarExcel">Exportar a Excel</button>
+        <button class="btn btn-danger" id="btnExportarPdf">Exportar a PDF</button>
+    </div>
+
+    <!-- 4. GRÁFICA (al final como resumen visual) -->
+    <div class="card card-custom">
         <div class="card-body">
             <h6 class="mb-3">Asistencia General vs. Ausencia</h6>
             <canvas id="asistenciaChart" height="100"></canvas>
         </div>
-    </div>
-
-    <!-- BOTÓN EXPORTAR -->
-    <div class="d-flex justify-content-end gap-2 mb-3">
-        <button class="btn btn-success" id="btnExportarExcel">Exportar a Excel</button>
-        <button class="btn btn-danger" id="btnExportarPdf">Exportar a PDF</button>
     </div>
 
 </div>

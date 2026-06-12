@@ -52,15 +52,20 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderFila(ciudadano) {
+    const nombreCompleto = `${ciudadano.nombres || ''} ${ciudadano.apellido_paterno || ''} ${ciudadano.apellido_materno || ''}`.trim();
     return `
       <tr>
         <td>${ciudadano.id_ciudadano}</td>
-        <td>${ciudadano.nombre_completo}</td>
+        <td>${nombreCompleto}</td>
         <td>${ciudadano.telefono}</td>
         <td>${formatearFecha(ciudadano.fecha_ingreso)}</td>
         <td>
-          <button class="btn btn-sm btn-primary btn-editar" data-id="${ciudadano.id_ciudadano}" data-nombre="${ciudadano.nombre_completo}" data-telefono="${ciudadano.telefono}">Editar</button>
-          <button class="btn btn-sm btn-danger btn-eliminar" data-id="${ciudadano.id_ciudadano}" data-nombre="${ciudadano.nombre_completo}">Eliminar</button>
+          <button class="btn btn-sm btn-primary btn-editar" data-id="${ciudadano.id_ciudadano}"
+            data-apellido-paterno="${ciudadano.apellido_paterno || ''}"
+            data-apellido-materno="${ciudadano.apellido_materno || ''}"
+            data-nombres="${ciudadano.nombres || ''}"
+            data-telefono="${ciudadano.telefono}">Editar</button>
+          <button class="btn btn-sm btn-danger btn-eliminar" data-id="${ciudadano.id_ciudadano}" data-nombre="${nombreCompleto}">Eliminar</button>
         </td>
       </tr>
     `;
@@ -84,7 +89,9 @@ document.addEventListener("DOMContentLoaded", () => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        nombre_completo: document.getElementById("agregarNombre").value.trim(),
+        apellido_paterno: document.getElementById("agregarApellidoPaterno").value.trim(),
+        apellido_materno: document.getElementById("agregarApellidoMaterno").value.trim(),
+        nombres: document.getElementById("agregarNombres").value.trim(),
         telefono
       })
     });
@@ -104,7 +111,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (botonEditar) {
       document.getElementById("editarId").value = botonEditar.dataset.id;
-      document.getElementById("editarNombre").value = botonEditar.dataset.nombre;
+      document.getElementById("editarApellidoPaterno").value = botonEditar.dataset.apellidoPaterno || botonEditar.dataset['apellido-paterno'] || '';
+      document.getElementById("editarApellidoMaterno").value = botonEditar.dataset.apellidoMaterno || botonEditar.dataset['apellido-materno'] || '';
+      document.getElementById("editarNombres").value = botonEditar.dataset.nombres || '';
       document.getElementById("editarTelefono").value = botonEditar.dataset.telefono;
       modalEditar.show();
     }
@@ -125,7 +134,9 @@ document.addEventListener("DOMContentLoaded", () => {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        nombre_completo: document.getElementById("editarNombre").value.trim(),
+        apellido_paterno: document.getElementById("editarApellidoPaterno").value.trim(),
+        apellido_materno: document.getElementById("editarApellidoMaterno").value.trim(),
+        nombres: document.getElementById("editarNombres").value.trim(),
         telefono
       })
     });
