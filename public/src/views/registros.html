@@ -38,27 +38,29 @@
             <input type="text" class="form-control" id="searchInput" placeholder="Ingrese nombre...">
             <button class="btn btn-primary" id="btnBuscar">Buscar</button>
 
-             <!-- Lista de sugerencias -->
+            <!-- Lista de sugerencias -->
             <div id="sugerencias" class="list-group position-absolute w-100" style="top: 100%; z-index: 1000;"></div>
         </div>
 
         <div class="result-placeholder p-0 border-0 bg-transparent">
-            <table class="table table-striped mt-3 mb-0">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Teléfono</th>
-                        <th>Estado</th>
-                        <th>Acción</th>
-                    </tr>
-                </thead>
-                <tbody id="tablaAsistencias">
-                    <tr>
-                        <td colspan="5">Seleccione una reunión para iniciar.</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div style="max-height:420px; overflow-y:auto;">
+                <table class="table table-striped mt-3 mb-0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Teléfono</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaAsistencias">
+                        <tr>
+                            <td colspan="5">Seleccione una reunión para iniciar.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

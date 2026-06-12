@@ -2,6 +2,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Elementos del DOM DE SAGA
   const reunionSelect = document.getElementById("filtroReunion");
   const ctx = document.getElementById("asistenciaChart");
+  const ordenamientoSelect = document.getElementById("ordenamientoReporte");
+  const statusFilter = document.getElementById("statusFilter");
+  const reporteBody = document.getElementById("reporteBody");
   const btnExportarExcel = document.getElementById("btnExportarExcel");
   const btnExportarPdf = document.getElementById("btnExportarPdf");
 
@@ -12,7 +15,9 @@ document.addEventListener("DOMContentLoaded", () => {
   let datosActuales = {
     reunionNombre: "",
     porcentajes: [0, 0],
-    asistentes: []
+    asistentes: [],
+    orden: 'nombre',
+    status: 'todos'
   };
 
   // Inicializar gráfica
@@ -84,8 +89,11 @@ document.addEventListener("DOMContentLoaded", () => {
       datosActuales = {
         reunionNombre: "",
         porcentajes: [0, 0],
-        asistentes: []
+        asistentes: [],
+        orden: ordenamientoSelect?.value || 'nombre',
+        status: statusFilter?.value || 'todos'
       };
+      renderTablaReporte();
       return;
     }
 
@@ -115,11 +123,18 @@ document.addEventListener("DOMContentLoaded", () => {
         porcentajes: [porcentajePresentes, porcentajeAusentes],
         asistentes: asistentes.map(a => ({
           id_ciudadano: a.id_ciudadano,
-          nombre_completo: a.nombre_completo,
+          nombres: a.nombres,
+          apellido_paterno: a.apellido_paterno,
+          apellido_materno: a.apellido_materno,
+          nombre_completo: a.nombre_completo || `${a.nombres || ''} ${a.apellido_paterno || ''} ${a.apellido_materno || ''}`.trim(),
           telefono: a.telefono,
           estado_asistencia: a.estado_asistencia
-        }))
+        })),
+        orden: ordenamientoSelect?.value || 'nombre',
+        status: statusFilter?.value || 'todos'
       };
+
+      renderTablaReporte();
 
     } catch (error) {
       console.error("Error al cargar datos:", error);
@@ -137,7 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /**
-   * Obtener datos para exportación con formato específico
+   * Obtener datos para exportación con formato específico respetando filtros activos
    */
   const INDICE_COL_ESTADO = 4;
   const COLOR_PRESENTE = [25, 135, 84];
@@ -148,17 +163,89 @@ document.addEventListener("DOMContentLoaded", () => {
       return null;
     }
 
+    // Aplicar orden actual
+    const ordenActual = ordenamientoSelect?.value || datosActuales.orden;
+    const asistentesOrdenados = ordenarAsistentes(datosActuales.asistentes, ordenActual);
+    
+    // Aplicar filtro de estado actual
+    const estadoActual = statusFilter?.value || datosActuales.status;
+    const asistentesFiltrados = filterPorEstado(asistentesOrdenados, estadoActual);
+    
     return {
       reunionNombre: datosActuales.reunionNombre,
       encabezados: ["#", "Nombre", "Teléfono", "ID", "Estado"],
-      filas: datosActuales.asistentes.map((a, indice) => [
+      filas: asistentesFiltrados.map((a, indice) => [
         indice + 1,
-        a.nombre_completo || "",
+        formatNombre(a, ordenActual),
         a.telefono || "",
         a.id_ciudadano || "",
         obtenerEstadoTexto(a.estado_asistencia)
       ])
     };
+  }
+
+  function ordenarAsistentes(list, criterio) {
+    const copy = (list || []).slice();
+    if (criterio === 'apellido') {
+      copy.sort((a, b) => {
+        const apA = String(a.apellido_paterno || '').toLowerCase();
+        const apB = String(b.apellido_paterno || '').toLowerCase();
+        if (apA !== apB) return apA.localeCompare(apB, 'es');
+        const nmA = String(a.nombres || '').toLowerCase();
+        const nmB = String(b.nombres || '').toLowerCase();
+        return nmA.localeCompare(nmB, 'es');
+      });
+      return copy;
+    }
+    copy.sort((a, b) => {
+      const nmA = String(a.nombres || '').toLowerCase();
+      const nmB = String(b.nombres || '').toLowerCase();
+      if (nmA !== nmB) return nmA.localeCompare(nmB, 'es');
+      const apA = String(a.apellido_paterno || '').toLowerCase();
+      const apB = String(b.apellido_paterno || '').toLowerCase();
+      return apA.localeCompare(apB, 'es');
+    });
+    return copy;
+  }
+
+  function formatNombre(a, criterio) {
+    const paterno = String(a.apellido_paterno || '').trim();
+    const materno = String(a.apellido_materno || '').trim();
+    const nombres = String(a.nombres || '').trim();
+    if (criterio === 'apellido') {
+      return [paterno, materno, nombres].filter(Boolean).join(' ');
+    }
+    return [nombres, paterno, materno].filter(Boolean).join(' ');
+  }
+
+  function filterPorEstado(list, estado) {
+    if (!list || !list.length) return [];
+    if (estado === 'todos') return list;
+    return list.filter(item => obtenerEstadoTexto(item.estado_asistencia) === estado);
+  }
+
+  function renderTablaReporte() {
+    if (!reporteBody) return;
+    const ordenActual = ordenamientoSelect?.value || datosActuales.orden;
+    const estadoActual = statusFilter?.value || datosActuales.status;
+    const listaOrdenada = ordenarAsistentes(datosActuales.asistentes, ordenActual);
+    const listaFiltrada = filterPorEstado(listaOrdenada, estadoActual);
+
+    reporteBody.innerHTML = listaFiltrada.length
+      ? listaFiltrada.map((a, i) => {
+          const estadoTexto = obtenerEstadoTexto(a.estado_asistencia);
+          const claseEstado = estadoTexto === 'Presente' ? 'text-success fw-bold' : 'text-danger fw-bold';
+          return `
+          <tr>
+            <td>${i + 1}</td>
+            <td>${formatNombre(a, ordenActual)}</td>
+            <td>${a.telefono || ''}</td>
+            <td>${a.id_ciudadano}</td>
+            <td class="${claseEstado}">${estadoTexto}</td>
+          </tr>
+        `;
+        }).join("")
+      : '<tr><td colspan="5">No hay registros.</td></tr>';
   }
 
   function estilosEstadoPdf(estado) {
@@ -315,6 +402,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Event Listeners
   reunionSelect?.addEventListener("change", cargarDatos);
+  ordenamientoSelect?.addEventListener('change', () => {
+    datosActuales.orden = ordenamientoSelect.value;
+    renderTablaReporte();
+  });
+  statusFilter?.addEventListener('change', () => {
+    datosActuales.status = statusFilter.value;
+    renderTablaReporte();
+  });
   btnExportarExcel?.addEventListener("click", exportarExcel);
   btnExportarPdf?.addEventListener("click", exportarPdf);
 

@@ -21,9 +21,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderFila(item) {
+    const nombreCompleto = `${item.nombres || ''} ${item.apellido_paterno || ''} ${item.apellido_materno || ''}`.trim();
     return `<tr>
       <td>${item.id_ciudadano}</td>
-      <td>${item.nombre_completo}</td>
+      <td>${nombreCompleto}</td>
       <td>${item.telefono}</td>
       <td>${item.estado_asistencia ? "Presente" : "Ausente"}</td>
       <td>
@@ -53,6 +54,9 @@ document.addEventListener("DOMContentLoaded", () => {
     tabla.innerHTML = data.length
       ? data.map(renderFila).join("")
       : '<tr><td colspan="5">No hay resultados.</td></tr>';
+    // Mantener el contenedor scroll en la posición superior al recargar resultados
+    const contenedor = tabla.closest('div[style]');
+    if (contenedor) contenedor.scrollTop = 0;
   }
 
   /* ===========================
@@ -84,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = await response.json();
 
     sugerencias.innerHTML = "";
-
+    /*
     data.slice(0, 5).forEach(item => {
       const opcion = document.createElement("button");
       opcion.type = "button";
@@ -99,7 +103,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       sugerencias.appendChild(opcion);
     });
-
+    */
+   
     // 🔹 También filtrar tabla en tiempo real
     cargarAsistencias();
   });

@@ -11,11 +11,27 @@ document.addEventListener("DOMContentLoaded", () => {
     return new Date().toISOString().slice(0, 10);
   }
 
+  function formatearFechaISO(fecha) {
+    if (!fecha) return "";
+    const d = new Date(fecha);
+    if (isNaN(d.getTime())) return fecha;
+    return d.toISOString().slice(0, 10);
+  }
+
   function configurarFechaMinima() {
     const hoy = fechaMinimaHoy();
     if (fechaReunion) {
       fechaReunion.min = hoy;
       fechaReunion.setCustomValidity("");
+    }
+  }
+
+  function configurarFechaEditarMinima() {
+    const hoy = fechaMinimaHoy();
+    const inputEditarFecha = document.getElementById("editarFechaReunion");
+    if (inputEditarFecha) {
+      inputEditarFecha.min = hoy;
+      inputEditarFecha.setCustomValidity("");
     }
   }
 
@@ -25,6 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   configurarFechaMinima();
   document.getElementById("modalNuevaReunion")?.addEventListener("show.bs.modal", configurarFechaMinima);
+  document.getElementById("modalEditarReunion")?.addEventListener("show.bs.modal", configurarFechaEditarMinima);
   fechaReunion?.addEventListener("change", () => {
     if (!esFechaPasada(fechaReunion.value)) {
       fechaReunion.setCustomValidity("");
@@ -87,8 +104,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!boton) return;
     document.getElementById("editarReunionId").value = boton.dataset.id;
     document.getElementById("editarNombreReunion").value = boton.dataset.nombre;
-    document.getElementById("editarFechaReunion").value = boton.dataset.fecha;
+    // Formatear la fecha al formato YYYY-MM-DD
+    document.getElementById("editarFechaReunion").value = formatearFechaISO(boton.dataset.fecha);
     document.getElementById("editarDescReunion").value = boton.dataset.descripcion;
+    // Configurar la fecha mínima antes de mostrar el modal
+    configurarFechaEditarMinima();
     modalEditar.show();
   });
 
