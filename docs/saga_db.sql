@@ -11,7 +11,9 @@ CREATE TABLE IF NOT EXISTS usuarios (
 
 CREATE TABLE IF NOT EXISTS ciudadanos (
     id_ciudadano INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_completo VARCHAR(120) NOT NULL,
+    apellido_paterno VARCHAR(80) NOT NULL,
+    apellido_materno VARCHAR(80) NOT NULL,
+    nombres VARCHAR(120) NOT NULL,
     telefono VARCHAR(20) NOT NULL,
     fecha_ingreso DATE NOT NULL DEFAULT (CURRENT_DATE),
     activo BOOLEAN NOT NULL DEFAULT TRUE
