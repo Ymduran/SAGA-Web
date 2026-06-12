@@ -14,8 +14,9 @@ CREATE TABLE IF NOT EXISTS ciudadanos (
     nombre_completo VARCHAR(120) NOT NULL,
     telefono VARCHAR(20) NOT NULL,
     fecha_ingreso DATE NOT NULL DEFAULT (CURRENT_DATE),
-    estado BOOLEAN NOT NULL DEFAULT TRUE
+    activo BOOLEAN NOT NULL DEFAULT TRUE
 );
+
 
 CREATE TABLE IF NOT EXISTS reuniones (
     id_reunion INT AUTO_INCREMENT PRIMARY KEY,
@@ -44,3 +45,5 @@ CREATE TABLE IF NOT EXISTS asistencias (
 INSERT INTO usuarios (nombre_usuario, contrasena, rol)
 VALUES ('admin', '1234', 'admin')
 ON DUPLICATE KEY UPDATE nombre_usuario = VALUES(nombre_usuario);
+
+
