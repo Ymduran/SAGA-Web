@@ -142,7 +142,7 @@ app.post("/api/auth/logout", (req, res) => {
 app.get("/api/ciudadanos", async (_req, res) => {
   try {
     const [rows] = await pool.query(
-      "SELECT id_ciudadano, nombre_completo, telefono, fecha_ingreso FROM ciudadanos WHERE estado = 1 ORDER BY id_ciudadano DESC"
+      "SELECT id_ciudadano, nombre_completo, telefono, fecha_ingreso FROM ciudadanos WHERE activo = 1 ORDER BY id_ciudadano DESC"
     );
     res.json(rows);
   } catch (error) {
@@ -190,7 +190,7 @@ app.put("/api/ciudadanos/:id", async (req, res) => {
 
   try {
     const [result] = await pool.query(
-      "UPDATE ciudadanos SET nombre_completo = ?, telefono = ? WHERE id_ciudadano = ? AND estado = 1",
+      "UPDATE ciudadanos SET nombre_completo = ?, telefono = ? WHERE id_ciudadano = ? AND activo = 1",
       [nombre_completo, telefonoValidado.telefono, id]
     );
     if (!result.affectedRows) {
@@ -206,7 +206,7 @@ app.delete("/api/ciudadanos/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const [result] = await pool.query(
-      "UPDATE ciudadanos SET estado = 0 WHERE id_ciudadano = ?",
+      "UPDATE ciudadanos SET activo = 0 WHERE id_ciudadano = ?",
       [id]
     );
     if (!result.affectedRows) {
@@ -272,18 +272,44 @@ app.get("/api/asistencias", async (req, res) => {
     return res.status(400).json({ error: "reunionId es obligatorio." });
   }
 
+  const searchPattern = `%${search}%`;
+
   try {
-    const [rows] = await pool.query(
-      `SELECT c.id_ciudadano, c.nombre_completo, c.telefono,
-              COALESCE(a.estado_asistencia, 0) AS estado_asistencia
-       FROM ciudadanos c
-       LEFT JOIN asistencias a
-         ON a.id_ciudadano = c.id_ciudadano AND a.id_reunion = ?
-       WHERE c.estado = 1
-         AND (c.nombre_completo LIKE ? OR CAST(c.id_ciudadano AS CHAR) LIKE ?)
-       ORDER BY c.nombre_completo ASC`,
-      [reunionId, `%${search}%`, `%${search}%`]
+    const [[reunion]] = await pool.query(
+      "SELECT (fecha_reunion >= CURDATE()) AS es_actual_o_futura FROM reuniones WHERE id_reunion = ?",
+      [reunionId]
     );
+    if (!reunion) {
+      return res.status(404).json({ error: "Reunión no encontrada." });
+    }
+
+    let rows;
+    if (reunion.es_actual_o_futura) {
+      // Reuniones de hoy o futuras: solo ciudadanos activos; quien ya tiene registro se conserva.
+      [rows] = await pool.query(
+        `SELECT c.id_ciudadano, c.nombre_completo, c.telefono,
+                COALESCE(a.estado_asistencia, 0) AS estado_asistencia
+         FROM ciudadanos c
+         LEFT JOIN asistencias a
+           ON a.id_ciudadano = c.id_ciudadano AND a.id_reunion = ?
+         WHERE (c.activo = 1 OR a.id_asistencia IS NOT NULL)
+           AND (c.nombre_completo LIKE ? OR CAST(c.id_ciudadano AS CHAR) LIKE ?)
+         ORDER BY c.nombre_completo ASC`,
+        [reunionId, searchPattern, searchPattern]
+      );
+    } else {
+      // Reuniones pasadas: historial fiel desde la tabla de asistencias (sin filtrar activo).
+      [rows] = await pool.query(
+        `SELECT c.id_ciudadano, c.nombre_completo, c.telefono, a.estado_asistencia
+         FROM asistencias a
+         INNER JOIN ciudadanos c ON c.id_ciudadano = a.id_ciudadano
+         WHERE a.id_reunion = ?
+           AND (c.nombre_completo LIKE ? OR CAST(c.id_ciudadano AS CHAR) LIKE ?)
+         ORDER BY c.nombre_completo ASC`,
+        [reunionId, searchPattern, searchPattern]
+      );
+    }
+
     res.json(rows);
   } catch (error) {
     res.status(500).json({ error: "No fue posible consultar asistencias." });
