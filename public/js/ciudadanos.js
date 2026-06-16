@@ -39,6 +39,18 @@ document.addEventListener("DOMContentLoaded", () => {
     return { ok: true, telefono: soloDigitos };
   }
 
+  function validarTextoNombre(texto, campo) {
+    const valor = String(texto || "").trim();
+    const nombreRegex = /^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$/;
+    if (!valor || !nombreRegex.test(valor)) {
+      return {
+        ok: false,
+        error: `El campo ${campo} solo permite letras, acentos y espacios.`
+      };
+    }
+    return { ok: true, valor };
+  }
+
   function obtenerTelefonoValido(inputId) {
     const input = document.getElementById(inputId);
     const resultado = validarTelefonoMx(input.value.trim());
@@ -82,6 +94,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   btnGuardar?.addEventListener("click", async () => {
     if (!formAgregar.reportValidity()) return;
+
+    const validApellidoPaterno = validarTextoNombre(document.getElementById("agregarApellidoPaterno").value, "Apellido Paterno");
+    if (!validApellidoPaterno.ok) {
+      alert(validApellidoPaterno.error);
+      return;
+    }
+    const validApellidoMaterno = validarTextoNombre(document.getElementById("agregarApellidoMaterno").value, "Apellido Materno");
+    if (!validApellidoMaterno.ok) {
+      alert(validApellidoMaterno.error);
+      return;
+    }
+    const validNombres = validarTextoNombre(document.getElementById("agregarNombres").value, "Nombre(s)");
+    if (!validNombres.ok) {
+      alert(validNombres.error);
+      return;
+    }
+
     const telefono = obtenerTelefonoValido("agregarTelefono");
     if (!telefono) return;
 
@@ -127,6 +156,22 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   btnActualizar?.addEventListener("click", async () => {
+    const validApellidoPaterno = validarTextoNombre(document.getElementById("editarApellidoPaterno").value, "Apellido Paterno");
+    if (!validApellidoPaterno.ok) {
+      alert(validApellidoPaterno.error);
+      return;
+    }
+    const validApellidoMaterno = validarTextoNombre(document.getElementById("editarApellidoMaterno").value, "Apellido Materno");
+    if (!validApellidoMaterno.ok) {
+      alert(validApellidoMaterno.error);
+      return;
+    }
+    const validNombres = validarTextoNombre(document.getElementById("editarNombres").value, "Nombre(s)");
+    if (!validNombres.ok) {
+      alert(validNombres.error);
+      return;
+    }
+
     const telefono = obtenerTelefonoValido("editarTelefono");
     if (!telefono) return;
 

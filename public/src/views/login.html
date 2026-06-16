@@ -48,7 +48,36 @@
 
           <button type="submit" class="btn-submit">Iniciar Sesión</button>
         </form>
+
+        <!-- Register form (hidden by default) -->
+        <form id="registerForm" class="login-form" style="display:none;" novalidate>
+          <div class="form-group">
+            <input id="registerUsuario" name="registerUsuario" type="text" class="form-input"
+                   placeholder="Nombre de usuario" autocomplete="username" />
+          </div>
+
+          <div class="form-group">
+            <label class="visually-hidden" for="registerContrasena">Contraseña</label>
+            <div class="password-input-wrap">
+              <input id="registerContrasena" name="registerContrasena" type="password" class="form-input"
+                     placeholder="Contraseña" autocomplete="new-password" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="visually-hidden" for="registerConfirmar">Confirmar contraseña</label>
+            <input id="registerConfirmar" name="registerConfirmar" type="password" class="form-input"
+                   placeholder="Confirmar contraseña" autocomplete="new-password" />
+          </div>
+
+          <button type="submit" class="btn-submit btn-success">Crear Cuenta</button>
+        </form>
+
         <p id="loginError" role="alert"></p>
+
+        <div class="text-center mt-3">
+          <a href="#" id="toggleRegister">¿No tienes cuenta? Crear cuenta</a>
+        </div>
       </div>
     </div>
   </div>
