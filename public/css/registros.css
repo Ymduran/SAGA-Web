@@ -1,26 +1,58 @@
-        body {
-            background-color: #f4f6f9;
-        }
+body {
+    background-color: #f4f6f9;
+}
 
-        
+.search-section {
+    margin-left: 240px;
+    padding: 100px;
+}
 
-        .search-section {
-            margin-left: 240px;
-            padding: 100px;
-        }
+.search-box {
+    max-width: 600px;
+    margin: auto;
+}
 
+.result-placeholder {
+    border: 2px dashed #d6d6d6;
+    padding: 40px;
+    text-align: center;
+    color: #9aa0a6;
+    margin-top: 30px;
+    border-radius: 8px;
+    background-color: #ffffff;
+}
 
-        .search-box {
-            max-width: 600px;
-            margin: auto;
-        }
+/* 
+   NUEVOS ESTILOS: IDENTIDAD VISUAL SAGA (TABLA AZUL)
 
-        .result-placeholder {
-            border: 2px dashed #d6d6d6;
-            padding: 40px;
-            text-align: center;
-            color: #9aa0a6;
-            margin-top: 30px;
-            border-radius: 8px;
-            background-color: #ffffff;
-        }
+/* Cabecera personalizada con el azul marino de la barra lateral */
+.saga-table-header th {
+    background-color: #002e6e !important; /* El color exacto de sidebar */
+    color: #ffffff !important;            /* Texto en blanco brillante */
+    border-bottom: 2px solid #001f4d !important;
+    text-align: center;                   /* Centra los títulos de las columnas */
+    padding: 12px 8px !important;         /* Un poquito de espacio  */
+}
+
+/* Alineación de los datos dentro de la tabla para que se vea limpio */
+#tablaAsistencias td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* El nombre se lee mejor alineado a la izquierda */
+#tablaAsistencias td:nth-child(2) {
+    text-align: left; 
+    padding-left: 15px;
+}
+
+/* Colores de estado dinámicos en la tabla */
+.estado-presente {
+    color: #198754 !important; /* Verde Bootstrap */
+    font-weight: bold !important;
+}
+
+.estado-ausente {
+    color: #dc3545 !important; /* Rojo Bootstrap */
+    font-weight: bold !important;
+}
