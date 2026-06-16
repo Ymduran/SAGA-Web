@@ -69,7 +69,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const reuniones = await response.json();
       
       reunionSelect.innerHTML = '<option value="">Seleccione una reunión</option>' +
-        reuniones.map((r) => `<option value="${r.id_reunion}">${r.nombre_reunion}</option>`).join("");
+        reuniones.map((r) => {
+          const fechaTexto = new Date(r.fecha_reunion).toLocaleDateString("es-MX");
+          return `<option value="${r.id_reunion}">${r.nombre_reunion} (${fechaTexto})</option>`;
+        }).join("");
     } catch (error) {
       console.error("Error al cargar reuniones:", error);
       reunionSelect.innerHTML = '<option value="">Error al cargar reuniones</option>';
@@ -234,7 +237,7 @@ document.addEventListener("DOMContentLoaded", () => {
     reporteBody.innerHTML = listaFiltrada.length
       ? listaFiltrada.map((a, i) => {
           const estadoTexto = obtenerEstadoTexto(a.estado_asistencia);
-          const claseEstado = estadoTexto === 'Presente' ? 'text-success fw-bold' : 'text-danger fw-bold';
+          const claseEstado = estadoTexto === 'Presente' ? 'estado-presente' : 'estado-ausente';
           return `
           <tr>
             <td>${i + 1}</td>
@@ -309,16 +312,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const { encabezados, filas, reunionNombre } = datos;
 
-    // Crear hoja con título
+    const fechaExportacion = new Date().toLocaleDateString("es-MX");
     const contenido = [
-      [`Reporte de Asistencia - ${reunionNombre}`],
-      [], // Fila vacía
+      ["Reporte de Asistencia"],
+      [`Reunión: ${reunionNombre}`],
+      [`Fecha de exportación: ${fechaExportacion}`],
+      [],
       encabezados,
       ...filas
     ];
 
     const hoja = XLSX.utils.aoa_to_sheet(contenido);
-    const filaInicioDatos = 3;
+    const filaInicioDatos = 5;
+    hoja["!merges"] = [
+      { s: { r: 0, c: 0 }, e: { r: 0, c: 4 } },
+      { s: { r: 1, c: 0 }, e: { r: 1, c: 4 } },
+      { s: { r: 2, c: 0 }, e: { r: 2, c: 4 } }
+    ];
+    if (!hoja["A1"]) hoja["A1"] = { v: "Reporte de Asistencia" };
+    if (!hoja["A2"]) hoja["A2"] = { v: `Reunión: ${reunionNombre}` };
+    if (!hoja["A3"]) hoja["A3"] = { v: `Fecha de exportación: ${fechaExportacion}` };
 
     colorearEstadoEnHoja(hoja, filaInicioDatos, filas.length);
 
