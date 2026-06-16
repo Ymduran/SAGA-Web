@@ -73,17 +73,26 @@
                 <form id="formAgregarCiudadano">
                     <div class="mb-3">
                         <label class="form-label">Apellido Paterno</label>
-                        <input type="text" class="form-control" id="agregarApellidoPaterno" required>
+                        <input type="text" class="form-control" id="agregarApellidoPaterno" required
+                               pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$"
+                               title="Solo letras, acentos y espacios. Ej. Pérez"
+                        >
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Apellido Materno</label>
-                        <input type="text" class="form-control" id="agregarApellidoMaterno" required>
+                        <input type="text" class="form-control" id="agregarApellidoMaterno" required
+                               pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$"
+                               title="Solo letras, acentos y espacios. Ej. López"
+                        >
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Nombre(s)</label>
-                        <input type="text" class="form-control" id="agregarNombres" required>
+                        <input type="text" class="form-control" id="agregarNombres" required
+                               pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$"
+                               title="Solo letras, acentos y espacios. Ej. María José"
+                        >
                     </div>
 
                     <div class="mb-3">
@@ -117,17 +126,26 @@
 
                     <div class="mb-3">
                         <label class="form-label">Apellido Paterno</label>
-                        <input type="text" id="editarApellidoPaterno" class="form-control" required>
+                        <input type="text" id="editarApellidoPaterno" class="form-control" required
+                               pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$"
+                               title="Solo letras, acentos y espacios. Ej. Pérez"
+                        >
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Apellido Materno</label>
-                        <input type="text" id="editarApellidoMaterno" class="form-control" required>
+                        <input type="text" id="editarApellidoMaterno" class="form-control" required
+                               pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$"
+                               title="Solo letras, acentos y espacios. Ej. López"
+                        >
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Nombre(s)</label>
-                        <input type="text" id="editarNombres" class="form-control" required>
+                        <input type="text" id="editarNombres" class="form-control" required
+                               pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$"
+                               title="Solo letras, acentos y espacios. Ej. María José"
+                        >
                     </div>
 
                     <div class="mb-3">
