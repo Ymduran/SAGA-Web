@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return `${anio}-${mes}-${dia}`;
   }
 
+  // Función para formatear la fecha a YYYY-MM-DD, manejando correctamente la zona horaria
   function formatearFechaISO(fecha) {
     if (!fecha) return "";
     const d = new Date(fecha);
