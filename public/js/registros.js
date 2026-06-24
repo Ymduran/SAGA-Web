@@ -72,6 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
     </tr>`;
   }
 
+  //Actualiza el estado de la reunión y habilita/deshabilita el botón de finalizar según corresponda
   function actualizarEstadoReunion() {
     const selectedOption = reunionSelect.selectedOptions[0];
     const statusContainer = document.getElementById("reunionStatus");

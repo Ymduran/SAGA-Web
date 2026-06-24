@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const iconoOjoAbierto = togglePassword?.querySelector(".icon-eye-on");
   if (!form) return;
 
+  //Actualizar icono de contraseña según el estado de visibilidad 
   function actualizarIconoContrasena(visible) {
     if (!iconoOjoCerrado || !iconoOjoAbierto || !togglePassword) return;
 

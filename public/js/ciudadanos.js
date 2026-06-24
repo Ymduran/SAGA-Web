@@ -39,6 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return { ok: true, telefono: soloDigitos };
   }
 
+  //Validar que el nombre solo contenga letras, acentos y espacios
   function validarTextoNombre(texto, campo) {
     const valor = String(texto || "").trim();
     const nombreRegex = /^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$/;

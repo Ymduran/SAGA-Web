@@ -1,4 +1,4 @@
-// En lugar de usar IDs específicos de una tabla, buscará en cualquier tabla que le pasemos.
+// En lugar de usar IDs específicos de una tabla, buscará en cualquier tabla que le pasemos sin excepcion alguna.
 
 function filtrarTabla(inputId, tablaId) {
     const input = document.getElementById(inputId);
