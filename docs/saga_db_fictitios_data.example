@@ -1,0 +1,144 @@
+# INSERCIÓN DE DATOS FICTICIOS PARA PODER REALIZAR PRUEBAS, ESO PARA probar en user01
+USE saga;
+
+-- ==========================================
+-- 1. ASEGURAR QUE USER01 EXISTE CON ID = 2 (Según image_43e0d6.png)
+-- ==========================================
+INSERT INTO usuarios (id_usuario, nombre_usuario, salt, password_hash, rol)
+VALUES (2, 'user01', '6e3d39d5645c8ca62c7750dc8ff02810', 'fa7b8c1273080223e60d950d14310ca1ae4749b...', 'admin')
+ON DUPLICATE KEY UPDATE id_usuario = 2;
+
+
+-- ==========================================
+-- 2. INSERTAR 100 CIUDADANOS ASOCIADOS A USER01 (id_usuario = 2)
+-- ==========================================
+INSERT INTO ciudadanos (id_usuario, apellido_paterno, apellido_materno, nombres, telefono, fecha_ingreso, activo) VALUES
+(2, 'González', 'Pérez', 'Juan Carlos', '+52 55 1234 5601', '2026-01-10', TRUE),
+(2, 'Rodríguez', 'Gómez', 'María Elena', '+52 81 1234 5602', '2026-01-12', TRUE),
+(2, 'López', 'Hernández', 'Luis Alberto', '+52 33 1234 5603', '2026-01-18', TRUE),
+(2, 'Martínez', 'Díaz', 'Ana Sofía', '+52 44 1234 5604', '2026-01-22', FALSE),
+(2, 'Pérez', 'Álvarez', 'Jorge Luis', '+52 55 1234 5605', '2026-01-25', TRUE),
+(2, 'Sánchez', 'Torres', 'Martha Beatriz', '+52 81 1234 5606', '2026-02-01', TRUE),
+(2, 'Ramírez', 'Vázquez', 'Pedro Damián', '+52 33 1234 5607', '2026-02-03', TRUE),
+(2, 'Flores', 'Castro', 'Claudia Patricia', '+52 44 1234 5608', '2026-02-05', TRUE),
+(2, 'Torres', 'Mejía', 'Guillermo', '+52 55 1234 5609', '2026-02-10', TRUE),
+(2, 'Rivera', 'Blanco', 'Sylvia Alejandra', '+52 81 1234 5610', '2026-02-14', TRUE),
+(2, 'Gómez', 'Suárez', 'Francisco Javier', '+52 33 1234 5611', '2026-02-20', TRUE),
+(2, 'Díaz', 'Salazar', 'Gabriela', '+52 44 1234 5612', '2026-02-22', TRUE),
+(2, 'Cruz', 'Delgado', 'Ricardo', '+52 55 1234 5613', '2026-02-25', TRUE),
+(2, 'Morales', 'Ortega', 'Adriana', '+52 81 1234 5614', '2026-02-28', FALSE),
+(2, 'Reyes', 'Guerrero', 'Manuel Eduardo', '+52 33 1234 5615', '2026-03-02', TRUE),
+(2, 'Ruiz', 'Mendoza', 'Verónica', '+52 44 1234 5616', '2026-03-05', TRUE),
+(2, 'Jiménez', 'Cortés', 'Alejandro', '+52 55 1234 5617', '2026-03-08', TRUE),
+(2, 'Silva', 'Espinoza', 'Natalia', '+52 81 1234 5618', '2026-03-12', TRUE),
+(2, 'Ortiz', 'Ríos', 'Héctor Hugo', '+52 33 1234 5619', '2026-03-15', TRUE),
+(2, 'Gutiérrez', 'Vega', 'Mónica Ivette', '+52 44 1234 5620', '2026-03-19', TRUE),
+(2, 'Chávez', 'Rojas', 'Arturo', '+52 55 1234 5621', '2026-03-22', TRUE),
+(2, 'Ramos', 'Marín', 'Lorena', '+52 81 1234 5622', '2026-03-26', TRUE),
+(2, 'Herrera', 'Medina', 'Enrique', '+52 33 1234 5623', '2026-04-01', TRUE),
+(2, 'Medina', 'Muñoz', 'Rosa María', '+52 44 1234 5624', '2026-04-03', TRUE),
+(2, 'Vargas', 'Maldonado', 'Daniel', '+52 55 1234 5625', '2026-04-07', FALSE),
+(2, 'Castro', 'Miranda', 'Sandra Luz', '+52 81 1234 5626', '2026-04-10', TRUE),
+(2, 'Guzmán', 'Pacheco', 'Carlos Fabián', '+52 33 1234 5627', '2026-04-15', TRUE),
+(2, 'Fernández', 'Fuentes', 'Paola', '+52 44 1234 5628', '2026-04-18', TRUE),
+(2, 'Juárez', 'Sandoval', 'Roberto', '+52 55 1234 5629', '2026-04-22', TRUE),
+(2, 'Brito', 'Arias', 'Diana Marcela', '+52 81 1234 5630', '2026-04-25', TRUE),
+(2, 'Aguilar', 'Benítez', 'Fernando', '+52 33 1234 5631', '2026-05-02', TRUE),
+(2, 'Pinto', 'Campos', 'Patricia', '+52 44 1234 5632', '2026-05-05', TRUE),
+(2, 'Cabrera', 'Lara', 'Raúl Armando', '+52 55 1234 5633', '2026-05-09', TRUE),
+(2, 'Calderón', 'Luna', 'Silvia Elena', '+52 81 1234 5634', '2026-05-12', TRUE),
+(2, 'Castillo', 'Figueroa', 'Oscar', '+52 33 1234 5635', '2026-05-15', TRUE),
+(2, 'Estrada', 'Gala', 'Margarita', '+52 44 1234 5636', '2026-05-18', TRUE),
+(2, 'Molina', 'Navarro', 'Sergio', '+52 55 1234 5637', '2026-05-22', FALSE),
+(2, 'Preciado', 'Olvera', 'Teresa', '+52 81 1234 5638', '2026-05-25', TRUE),
+(2, 'Miranda', 'Quiroz', 'Ignacio', '+52 33 1234 5639', '2026-05-29', TRUE),
+(2, 'Suárez', 'Rangel', 'Karla Paola', '+52 44 1234 5640', '2026-06-01', TRUE),
+(2, 'Salazar', 'Serrano', 'Miguel Ángel', '+52 55 1234 5641', '2026-06-02', TRUE),
+(2, 'Velázquez', 'Solís', 'Claudia', '+52 81 1234 5642', '2026-06-03', TRUE),
+(2, 'Guzmán', 'Tapia', 'Andrés', '+52 33 1234 5643', '2026-06-04', TRUE),
+(2, 'Villanueva', 'Valdez', 'Beatriz', '+52 44 1234 5644', '2026-06-05', TRUE),
+(2, 'Zavala', 'Zamora', 'Gustavo', '+52 55 1234 5645', '2026-06-06', TRUE),
+(2, 'Meza', 'Montoya', 'Alicia', '+52 81 1234 5646', '2026-06-07', TRUE),
+(2, 'Soto', 'Mora', 'Felipe', '+52 33 1234 5647', '2026-06-08', TRUE),
+(2, 'Delgado', 'Peralta', 'Estela', '+52 44 1234 5648', '2026-06-09', TRUE),
+(2, 'Ríos', 'Corona', 'Hugo Alfonso', '+52 55 1234 5649', '2026-06-10', TRUE),
+(2, 'Álvarez', 'Ibarra', 'Fabiola', '+52 81 1234 5650', '2026-06-11', TRUE),
+(2, 'Benítez', 'Mendoza', 'Mauricio', '+52 55 1234 5651', '2026-06-12', TRUE),
+(2, 'Camacho', 'Vargas', 'Gabriela Lucía', '+52 81 1234 5652', '2026-06-13', TRUE),
+(2, 'Domínguez', 'Rojas', 'Esteban', '+52 33 1234 5653', '2026-06-14', TRUE),
+(2, 'Esparza', 'Salas', 'Montserrat', '+52 44 1234 5654', '2026-06-15', FALSE),
+(2, 'Franco', 'Luna', 'César Augusto', '+52 55 1234 5655', '2026-06-16', TRUE),
+(2, 'Gallardo', 'Ortiz', 'Daniela', '+52 81 1234 5656', '2026-06-17', TRUE),
+(2, 'Holguín', 'Mora', 'Saúl', '+52 33 1234 5657', '2026-06-18', TRUE),
+(2, 'Ibarra', 'Cortés', 'Paola Michelle', '+52 44 1234 5658', '2026-06-19', TRUE),
+(2, 'Jáuregui', 'Ávalos', 'Francisco', '+52 55 1234 5659', '2026-06-20', TRUE),
+(2, 'Lara', 'Tello', 'Beatriz Adriana', '+52 81 1234 5660', '2026-06-21', TRUE),
+(2, 'Maldonado', 'Palacios', 'Humberto', '+52 33 1234 5661', '2026-06-22', TRUE),
+(2, 'Nava', 'Escobedo', 'Araceli', '+52 44 1234 5662', '2026-06-23', TRUE),
+(2, 'Olivares', 'Rangel', 'Rubén', '+52 55 1234 5663', '2026-06-24', TRUE),
+(2, 'Pacheco', 'Cervantes', 'Paulina', '+52 81 1234 5664', '2026-06-25', TRUE),
+(2, 'Quintero', 'Solís', 'Alejandra', '+52 33 1234 5665', '2026-06-26', TRUE),
+(2, 'Reséndiz', 'Orozco', 'Gerardo', '+52 44 1234 5666', '2026-06-26', TRUE),
+(2, 'Sáenz', 'Beltrán', 'Lorena', '+52 55 1234 5667', '2026-06-26', FALSE),
+(2, 'Trejo', 'Aranda', 'Cuauhtémoc', '+52 81 1234 5668', '2026-06-26', TRUE),
+(2, 'Uribe', 'Barajas', 'Ximena', '+52 33 1234 5669', '2026-06-26', TRUE),
+(2, 'Valenzuela', 'Cardona', 'Rodolfo', '+52 44 1234 5670', '2026-06-26', TRUE),
+(2, 'Yáñez', 'Casillas', 'Norma Alicia', '+52 55 1234 5671', '2026-06-26', TRUE),
+(2, 'Zamora', 'Chapa', 'Óscar Iván', '+52 81 1234 5672', '2026-06-26', TRUE),
+(2, 'Acevedo', 'Durán', 'Marisol', '+52 33 1234 5673', '2026-06-26', TRUE),
+(2, 'Becerra', 'Elizondo', 'Enrique', '+52 44 1234 5674', '2026-06-26', TRUE),
+(2, 'Calvillo', 'Fierro', 'Liliana', '+52 55 1234 5675', '2026-06-26', TRUE),
+(2, 'Dávila', 'Gallegos', 'Alfonso', '+52 81 1234 5676', '2026-06-26', FALSE),
+(2, 'Enríquez', 'Garza', 'Mayra Alejandra', '+52 33 1234 5677', '2026-06-26', TRUE),
+(2, 'Fabela', 'Gaytán', 'Armando', '+52 44 1234 5678', '2026-06-26', TRUE),
+(2, 'Galarza', 'Guerra', 'Karina', '+52 55 1234 5679', '2026-06-26', TRUE),
+(2, 'Heredia', 'Jasso', 'Javier', '+52 81 1234 5680', '2026-06-26', TRUE),
+(2, 'Islas', 'Juárez', 'Adrián', '+52 33 1234 5681', '2026-06-26', TRUE),
+(2, 'Jiménez', 'Leal', 'Fabián', '+52 44 1234 5682', '2026-06-26', TRUE),
+(2, 'León', 'Macías', 'Silvia', '+52 55 1234 5683', '2026-06-26', TRUE),
+(2, 'Mata', 'Marín', 'Rogelio', '+52 81 1234 5684', '2026-06-26', FALSE),
+(2, 'Negrete', 'Mata', 'Luz María', '+52 33 1234 5685', '2026-06-26', TRUE),
+(2, 'Ochoa', 'Meza', 'Ignacio', '+52 44 1234 5686', '2026-06-26', TRUE),
+(2, 'Padilla', 'Nieto', 'Yolanda', '+52 55 1234 5687', '2026-06-26', TRUE),
+(2, 'Quintanilla', 'Oliva', 'Héctor', '+52 81 1234 5688', '2026-06-26', TRUE),
+(2, 'Rangel', 'Padilla', 'Claudia', '+52 33 1234 5689', '2026-06-26', TRUE),
+(2, 'Salgado', 'Paredes', 'Efraín', '+52 44 1234 5690', '2026-06-26', TRUE),
+(2, 'Tobar', 'Quintana', 'Rocío', '+52 55 1234 5691', '2026-06-26', TRUE),
+(2, 'Uvalle', 'Rendon', 'Ismael', '+52 81 1234 5692', '2026-06-26', TRUE),
+(2, 'Valadez', 'Reyna', 'Verónica', '+52 33 1234 5693', '2026-06-26', TRUE),
+(2, 'Zamarripa', 'Sáenz', 'Arturo', '+52 44 1234 5694', '2026-06-26', TRUE),
+(2, 'Alba', 'Serna', 'Patricia', '+52 55 1234 5695', '2026-06-26', TRUE),
+(2, 'Barrientos', 'Soto', 'Miguel', '+52 81 1234 5696', '2026-06-26', TRUE),
+(2, 'Castañeda', 'Tijerina', 'Laura', '+52 33 1234 5697', '2026-06-26', FALSE),
+(2, 'De la Cruz', 'Uresti', 'Juan', '+52 44 1234 5698', '2026-06-26', TRUE),
+(2, 'Elías', 'Valdez', 'Rosa', '+52 55 1234 5699', '2026-06-26', TRUE),
+(2, 'Fuentes', 'Villalobos', 'Carlos', '+52 81 1234 5700', '2026-06-26', TRUE);
+
+
+-- ==========================================
+-- 3. INSERTAR 5 REUNIONES ASOCIADAS A USER01 (id_usuario = 2)
+-- ==========================================
+INSERT INTO reuniones (id_usuario, nombre_reunion, fecha_reunion, descripcion, finalizada) VALUES
+(2, 'Asamblea General Informativa', '2026-03-05', 'Reunión inicial del año para actualizar estados de cuentas.', TRUE),
+(2, 'Comité de Seguridad Vecinal', '2026-04-12', 'Coordinación con las patrullas de la zona para rondines.', TRUE),
+(2, 'Taller de Presupuesto Comunitario', '2026-05-18', 'Definición de proyectos de mejora para áreas verdes.', TRUE),
+(2, 'Planeación de Evento del Día del Niño', '2026-06-02', 'Asignación de tareas para el festival infantil comunitario.', TRUE),
+(2, 'Sesión Ordinaria de Cierre de Mes', '2026-06-26', 'Evaluación de metas y reporte mensual de incidencias.', FALSE);
+
+
+-- ==========================================
+-- 4. INSERTAR HISTORIAL DE ASISTENCIAS DE PRUEBA
+-- ==========================================
+-- Registraremos asistencias cruzadas de los primeros ciudadanos en las distintas reuniones creadas.
+INSERT INTO asistencias (id_ciudadano, id_reunion, estado_asistencia) VALUES
+-- Reunión 1
+(1, 1, TRUE), (2, 1, TRUE), (3, 1, FALSE), (4, 1, TRUE), (5, 1, TRUE), (6, 1, TRUE), (7, 1, FALSE), (8, 1, TRUE),
+-- Reunión 2
+(1, 2, TRUE), (3, 2, TRUE), (5, 2, FALSE), (10, 2, TRUE), (12, 2, TRUE), (15, 2, TRUE), (20, 2, FALSE),
+-- Reunión 3
+(2, 3, TRUE), (4, 3, FALSE), (6, 3, TRUE), (25, 3, TRUE), (30, 3, TRUE), (35, 3, FALSE), (40, 3, TRUE),
+-- Reunión 4
+(1, 4, TRUE), (2, 4, TRUE), (50, 4, TRUE), (55, 4, FALSE), (60, 4, TRUE), (65, 4, TRUE), (70, 4, TRUE),
+-- Reunión 5 (Hoy)
+(1, 5, TRUE), (2, 5, TRUE), (3, 5, TRUE), (80, 5, TRUE), (85, 5, FALSE), (90, 5, TRUE), (100, 5, TRUE)
+ON DUPLICATE KEY UPDATE id_ciudadano = id_ciudadano;
