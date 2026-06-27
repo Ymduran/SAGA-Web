@@ -27,4 +27,4 @@ SAGA es una solución web diseñada para optimizar y automatizar el registro de 
 6. Abre `http://localhost:3000`.
 
 ---
-*Proyecto desarrollado en la clase de Ingeniería de Software II - UNSIJ.*
+*Proyecto desarrollado en la clase de Ingeniería de Software II y Tecnologías Web I - UNSIJ.*
