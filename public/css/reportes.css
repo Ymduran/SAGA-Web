@@ -21,3 +21,13 @@
             background-color: #d89200;
             color: white;
         }
+
+        .estado-presente {
+            color: #198754 !important;
+            font-weight: bold;
+        }
+
+        .estado-ausente {
+            color: #dc3545 !important;
+            font-weight: bold;
+        }

@@ -2,74 +2,97 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SAGA - Registros</title>
 
-    <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- CSS del header -->
     <link rel="stylesheet" href="/public/css/header.css">
-    
-    <!-- CSS propio -->
     <link rel="stylesheet" href="/public/css/forms.css">
     <link rel="stylesheet" href="/public/css/registros.css">
 </head>
 <body>
 
-<!-- SIDEBAR DINÁMICO -->
 <div id="header-placeholder"></div>
 
-<!-- NAVBAR SUPERIOR DE SAGA -->
 <div class="topbar">
     <h5>Sistema Automatizado de Gestión de Asistencias (SAGA)</h5>
 </div>
 
-<!-- CONTENIDO -->
 <div class="search-section">
 
     <div class="search-box text-center">
-        <h6 class="mb-3">Registro de Asistencia</h6>
+        <h6 class="mb-3 fw-bold text-uppercase tracking-wider text-secondary">Registro de Asistencia</h6>
 
-        <div class="mb-3">
-            <select class="form-select" id="reunionSelect"></select>
+        <div class="mb-3 d-flex flex-column flex-md-row align-items-center gap-2">
+            <select class="form-select flex-grow-1" id="reunionSelect"></select>
+            <button type="button" class="btn btn-warning fw-bold text-dark" id="btnFinalizarReunion">Finalizar Reunión</button>
         </div>
 
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" id="searchInput" placeholder="Ingrese nombre...">
-            <button class="btn btn-primary" id="btnBuscar">Buscar</button>
+        <div class="mb-2" id="reunionStatus"></div>
+        
+        <div class="mb-3" id="asistenciaCounters">
+            <span class="badge bg-success px-3 py-2 me-2 fs-6 shadow-sm">
+                Presentes: <span id="presentesCount">0</span>
+            </span>
+            <span class="badge bg-danger px-3 py-2 fs-6 shadow-sm">
+                Ausentes: <span id="ausentesCount">0</span>
+            </span>
+        </div>
 
-             <!-- Lista de sugerencias -->
-            <div id="sugerencias" class="list-group position-absolute w-100" style="top: 100%; z-index: 1000;"></div>
+        <div class="input-group mb-3 position-relative">
+            <input type="text" class="form-control" id="searchInput" placeholder="Ingrese nombre...">
+            <button class="btn btn-primary px-4" id="btnBuscar">Buscar</button>
+
+            <div id="sugerencias" class="list-group position-absolute w-100 shadow" style="top: 100%; z-index: 1000;"></div>
         </div>
 
         <div class="result-placeholder p-0 border-0 bg-transparent">
-            <table class="table table-striped mt-3 mb-0">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Teléfono</th>
-                        <th>Estado</th>
-                        <th>Acción</th>
-                    </tr>
-                </thead>
-                <tbody id="tablaAsistencias">
-                    <tr>
-                        <td colspan="5">Seleccione una reunión para iniciar.</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div style="max-height:420px; overflow-y:auto;" class="border rounded shadow-sm bg-white">
+                <table class="table table-striped align-middle mb-0">
+                    <thead class="saga-table-header sticky-top">
+                        <tr>
+                            <th style="width: 10%;">ID</th>
+                            <th style="width: 35%;">Nombre</th>
+                            <th style="width: 20%;">Teléfono</th>
+                            <th style="width: 15%;">Estado</th>
+                            <th style="width: 20%;">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaAsistencias">
+                        <tr>
+                            <td colspan="5" class="text-muted py-4">Seleccione una reunión para iniciar.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
 </div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<div class="modal fade" id="modalConfirmarFinalizar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalConfirmarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow border-0">
+            <div class="modal-header bg-warning text-dark py-2">
+                <h5 class="modal-title fw-bold fs-6" id="modalConfirmarLabel">Confirmar Cierre de Reunión</h5>
+                <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-start py-4 px-4 text-secondary">
+                <p class="mb-0 fs-6">¿Está seguro de que desea finalizar la reunión <strong id="modalNombreReunion" class="text-dark"></strong>?</p>
+                <small class="text-danger d-block mt-2 fw-semibold">⚠️ Una vez finalizada la sesión, el registro se congelará y no se podrán cambiar ni editar las asistencias.</small>
+            </div>
+            <div class="modal-footer bg-light py-2">
+                <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-warning fw-bold text-dark px-3" id="btnModalConfirmarSi">Finalizar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-<!-- Cargar Sidebar -->
-<script src="/public/js/auth.js"></script>
-<script src="/public/js/layout.js"></script>
-<script src="/public/js/registros.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
+<script src="/public/js/auth.js" defer></script>
+<script src="/public/js/layout.js" defer></script>
+<script src="/public/js/registros.js" defer></script>
 </body>
 </html>

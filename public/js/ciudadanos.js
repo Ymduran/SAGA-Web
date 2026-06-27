@@ -39,6 +39,18 @@ document.addEventListener("DOMContentLoaded", () => {
     return { ok: true, telefono: soloDigitos };
   }
 
+  function validarTextoNombre(texto, campo) {
+    const valor = String(texto || "").trim();
+    const nombreRegex = /^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$/;
+    if (!valor || !nombreRegex.test(valor)) {
+      return {
+        ok: false,
+        error: `El campo ${campo} solo permite letras, acentos y espacios.`
+      };
+    }
+    return { ok: true, valor };
+  }
+
   function obtenerTelefonoValido(inputId) {
     const input = document.getElementById(inputId);
     const resultado = validarTelefonoMx(input.value.trim());
@@ -52,15 +64,20 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderFila(ciudadano) {
+    const nombreCompleto = `${ciudadano.nombres || ''} ${ciudadano.apellido_paterno || ''} ${ciudadano.apellido_materno || ''}`.trim();
     return `
       <tr>
         <td>${ciudadano.id_ciudadano}</td>
-        <td>${ciudadano.nombre_completo}</td>
+        <td>${nombreCompleto}</td>
         <td>${ciudadano.telefono}</td>
         <td>${formatearFecha(ciudadano.fecha_ingreso)}</td>
         <td>
-          <button class="btn btn-sm btn-primary btn-editar" data-id="${ciudadano.id_ciudadano}" data-nombre="${ciudadano.nombre_completo}" data-telefono="${ciudadano.telefono}">Editar</button>
-          <button class="btn btn-sm btn-danger btn-eliminar" data-id="${ciudadano.id_ciudadano}" data-nombre="${ciudadano.nombre_completo}">Eliminar</button>
+          <button class="btn btn-sm btn-primary btn-editar" data-id="${ciudadano.id_ciudadano}"
+            data-apellido-paterno="${ciudadano.apellido_paterno || ''}"
+            data-apellido-materno="${ciudadano.apellido_materno || ''}"
+            data-nombres="${ciudadano.nombres || ''}"
+            data-telefono="${ciudadano.telefono}">Editar</button>
+          <button class="btn btn-sm btn-danger btn-eliminar" data-id="${ciudadano.id_ciudadano}" data-nombre="${nombreCompleto}">Eliminar</button>
         </td>
       </tr>
     `;
@@ -77,6 +94,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   btnGuardar?.addEventListener("click", async () => {
     if (!formAgregar.reportValidity()) return;
+
+    const validApellidoPaterno = validarTextoNombre(document.getElementById("agregarApellidoPaterno").value, "Apellido Paterno");
+    if (!validApellidoPaterno.ok) {
+      alert(validApellidoPaterno.error);
+      return;
+    }
+    const validApellidoMaterno = validarTextoNombre(document.getElementById("agregarApellidoMaterno").value, "Apellido Materno");
+    if (!validApellidoMaterno.ok) {
+      alert(validApellidoMaterno.error);
+      return;
+    }
+    const validNombres = validarTextoNombre(document.getElementById("agregarNombres").value, "Nombre(s)");
+    if (!validNombres.ok) {
+      alert(validNombres.error);
+      return;
+    }
+
     const telefono = obtenerTelefonoValido("agregarTelefono");
     if (!telefono) return;
 
@@ -84,7 +118,9 @@ document.addEventListener("DOMContentLoaded", () => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        nombre_completo: document.getElementById("agregarNombre").value.trim(),
+        apellido_paterno: document.getElementById("agregarApellidoPaterno").value.trim(),
+        apellido_materno: document.getElementById("agregarApellidoMaterno").value.trim(),
+        nombres: document.getElementById("agregarNombres").value.trim(),
         telefono
       })
     });
@@ -104,7 +140,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (botonEditar) {
       document.getElementById("editarId").value = botonEditar.dataset.id;
-      document.getElementById("editarNombre").value = botonEditar.dataset.nombre;
+      document.getElementById("editarApellidoPaterno").value = botonEditar.dataset.apellidoPaterno || botonEditar.dataset['apellido-paterno'] || '';
+      document.getElementById("editarApellidoMaterno").value = botonEditar.dataset.apellidoMaterno || botonEditar.dataset['apellido-materno'] || '';
+      document.getElementById("editarNombres").value = botonEditar.dataset.nombres || '';
       document.getElementById("editarTelefono").value = botonEditar.dataset.telefono;
       modalEditar.show();
     }
@@ -118,6 +156,22 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   btnActualizar?.addEventListener("click", async () => {
+    const validApellidoPaterno = validarTextoNombre(document.getElementById("editarApellidoPaterno").value, "Apellido Paterno");
+    if (!validApellidoPaterno.ok) {
+      alert(validApellidoPaterno.error);
+      return;
+    }
+    const validApellidoMaterno = validarTextoNombre(document.getElementById("editarApellidoMaterno").value, "Apellido Materno");
+    if (!validApellidoMaterno.ok) {
+      alert(validApellidoMaterno.error);
+      return;
+    }
+    const validNombres = validarTextoNombre(document.getElementById("editarNombres").value, "Nombre(s)");
+    if (!validNombres.ok) {
+      alert(validNombres.error);
+      return;
+    }
+
     const telefono = obtenerTelefonoValido("editarTelefono");
     if (!telefono) return;
 
@@ -125,7 +179,9 @@ document.addEventListener("DOMContentLoaded", () => {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        nombre_completo: document.getElementById("editarNombre").value.trim(),
+        apellido_paterno: document.getElementById("editarApellidoPaterno").value.trim(),
+        apellido_materno: document.getElementById("editarApellidoMaterno").value.trim(),
+        nombres: document.getElementById("editarNombres").value.trim(),
         telefono
       })
     });
