@@ -26,5 +26,7 @@ SAGA es una solución web diseñada para optimizar y automatizar el registro de 
 5. Ejecuta el backend: `npm start`.
 6. Abre `http://localhost:3000`.
 
+   ### O ahora desplegado en https://saga-web-production.up.railway.app/
+
 ---
 *Proyecto desarrollado en la clase de Ingeniería de Software II - UNSIJ.*
